@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/cultuurnet/udb3-export.svg?branch=master)](https://travis-ci.org/cultuurnet/udb3-export) [![Coverage Status](https://coveralls.io/repos/github/cultuurnet/udb3-export/badge.svg?branch=master)](https://coveralls.io/github/cultuurnet/udb3-export?branch=master)
