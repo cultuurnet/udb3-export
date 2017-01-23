@@ -115,7 +115,7 @@ class HTMLEventFormatter
         $formattedEvent = [];
 
         if (isset($event->image)) {
-            $formattedEvent['image'] = 'http:' . $event->image;
+            $formattedEvent['image'] = $event->image;
         }
 
         $type = EventType::fromJSONLDEvent($eventString);
