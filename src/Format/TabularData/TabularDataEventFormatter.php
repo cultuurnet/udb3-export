@@ -136,13 +136,11 @@ class TabularDataEventFormatter
                 'contactPoint.email',
                 'contactPoint.phone',
                 'contactPoint.url',
-                //'contactPoint.reservations.email',
-                //'contactPoint.reservations.telephone',
-                //'contactPoint.reservations.url',
             ],
             'bookingInfo' => [
-                'bookingInfo.price',
                 'bookingInfo.url',
+                'bookingInfo.phone',
+                'bookingInfo.email',
             ],
         ];
 
@@ -256,15 +254,18 @@ class TabularDataEventFormatter
                 'property' => 'kansentarief'
             ],
             'bookingInfo.url' => [
-                'name' => 'ticket link',
-                'include' => function ($event) {
-                    if (property_exists($event, 'bookingInfo')) {
-                        $first = reset($event->bookingInfo);
-                        if (is_object($first) && property_exists($first, 'url')) {
-                            return $first->url;
-                        }
-                    }
-                },
+                'name' => 'reservatie url',
+                'include' => $this->includeBookingInfo('url'),
+                'property' => 'bookingInfo'
+            ],
+            'bookingInfo.phone' => [
+                'name' => 'reservatie tel',
+                'include' => $this->includeBookingInfo('phone'),
+                'property' => 'bookingInfo'
+            ],
+            'bookingInfo.email' => [
+                'name' => 'reservatie e-mail',
+                'include' => $this->includeBookingInfo('email'),
                 'property' => 'bookingInfo'
             ],
             'description' => [
@@ -582,5 +583,21 @@ class TabularDataEventFormatter
         }
 
         return new \stdClass();
+    }
+
+    /**
+     * @param string $propertyName
+     * @return \Closure
+     */
+    private function includeBookingInfo($propertyName)
+    {
+        return function ($event) use ($propertyName) {
+            if (property_exists($event, 'bookingInfo')) {
+                $bookingInfo = $event->bookingInfo;
+                if (is_object($bookingInfo) && property_exists($bookingInfo, $propertyName)) {
+                    return $bookingInfo->{$propertyName};
+                }
+            }
+        };
     }
 }
