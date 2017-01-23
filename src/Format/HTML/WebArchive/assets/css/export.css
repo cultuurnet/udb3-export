@@ -22,6 +22,7 @@ html {
 .activity__image-container
 {
 	position: relative;
+	text-align: center;
 }
 .no-image
 {
@@ -34,8 +35,13 @@ html {
     height: auto;
     max-height: 4cm;
     max-width: 4cm;
-	margin: 0 auto 0.5cm auto;
+	margin: 0 auto;
 	display: block;
+}
+.activity__image__copyright
+{
+	display: inline-block;
+	margin-bottom: 0.5cm;
 }
 .activity__type {
 	color: #777;

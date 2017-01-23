@@ -166,6 +166,8 @@ class HTMLEventFormatter
             $formattedEvent['ageFrom'] = explode('-', $ageRange)[0];
         }
 
+        $this->addMediaObject($event, $formattedEvent);
+
         return $formattedEvent;
     }
 
@@ -267,5 +269,16 @@ class HTMLEventFormatter
 
         $formattedEvent['price'] =
             $basePrice ? $this->priceFormatter->format($basePrice->price) : 'Niet ingevoerd';
+    }
+
+    /**
+     * @param stdClass $event
+     * @param array $formattedEvent
+     */
+    private function addMediaObject($event, &$formattedEvent)
+    {
+        if (property_exists($event, 'mediaObject')) {
+            $formattedEvent['mediaObject'] = $event->mediaObject[0];
+        }
     }
 }
