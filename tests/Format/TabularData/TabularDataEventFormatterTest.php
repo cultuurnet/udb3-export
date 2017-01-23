@@ -3,6 +3,8 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
+use CultureFeed_Cdb_Data_Calendar_Permanent;
+use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Event\EventAdvantage;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfo;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
@@ -579,6 +581,38 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
             'image.url' => 'http://media.uitdatabank.be/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg',
             'image.description' => 'De Kortste Nacht',
             'image.copyrightHolder' => 'Rode Ridder',
+        ];
+
+        $this->assertEquals($expectedFormattedEvent, $formattedEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_include_a_long_summary_when_exporting_with_a_calendar_repository()
+    {
+        $includedProperties = [
+            'id',
+            'calendarSummary'
+        ];
+
+        $calendar = new \CultureFeed_Cdb_Data_Calendar_PeriodList();
+        $calendar->add(new \CultureFeed_Cdb_Data_Calendar_Period('2013-12-06', '2013-12-25'));
+
+        $calendarRepository = $this->createMock(CalendarRepositoryInterface::class);
+        $calendarRepository
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn($calendar);
+
+        $event = $this->getJSONEventFromFile('event_with_dates.json');
+        $formatter = new TabularDataEventFormatter($includedProperties, null, $calendarRepository);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $expectedFormattedEvent = [
+            'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
+            'calendarSummary.short' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
+            'calendarSummary.long' => 'Van 6 december 2013 tot 25 december 2013',
         ];
 
         $this->assertEquals($expectedFormattedEvent, $formattedEvent);

@@ -2,6 +2,9 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
+use CultuurNet\CalendarSummary\CalendarPlainTextFormatter;
+use CultuurNet\UDB3\Calendar;
+use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
 use CommerceGuys\Intl\Currency\CurrencyRepository;
 use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
 use CommerceGuys\Intl\Formatter\NumberFormatter;
@@ -38,6 +41,12 @@ class TabularDataEventFormatter
      */
     protected $uitpas;
 
+
+    /**
+     * @var CalendarRepositoryInterface
+     */
+    protected $calendarRepository;
+
     /**
      * @var NumberFormatterInterface
      */
@@ -56,15 +65,18 @@ class TabularDataEventFormatter
     /**
      * @param string[] $include A list of properties to include
      * @param EventInfoServiceInterface|null $uitpas
+     * @param CalendarRepositoryInterface|null $calendarRepository
      */
     public function __construct(
         array $include,
-        EventInfoServiceInterface $uitpas = null
+        EventInfoServiceInterface $uitpas = null,
+        CalendarRepositoryInterface $calendarRepository = null
     ) {
         $this->htmlFilter = new StripHtmlStringFilter();
         $this->includedProperties = $this->includedOrDefaultProperties($include);
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
+        $this->calendarRepository = $calendarRepository;
 
         $numberFormat = (new NumberFormatRepository())->get('nl-BE');
         $this->basePriceFormatter = (new NumberFormatter($numberFormat))->setMinimumFractionDigits(2);
@@ -223,11 +235,7 @@ class TabularDataEventFormatter
             'id' => [
                 'name' => 'id',
                 'include' => function ($event) {
-                    $eventUri = $event->{'@id'};
-                    $uriParts = explode('/', $eventUri);
-                    $eventId = array_pop($uriParts);
-
-                    return $eventId;
+                    return $this->parseEventIdFromUrl($event);
                 },
                 'property' => 'id'
             ],
@@ -367,9 +375,7 @@ class TabularDataEventFormatter
             ],
             'calendarSummary.long' => [
                 'name' => 'lange kalendersamenvatting',
-                'include' => function ($event) {
-                    return $event->calendarSummary;
-                },
+                'include' => $this->longCalendarSummaryFormatter($this->calendarRepository),
                 'property' => 'calendarSummary'
             ],
             'labels.visible' => [
@@ -737,6 +743,44 @@ class TabularDataEventFormatter
             }
             $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
             return $mainImage ? $mainImage->{$propertyName} : '';
+        };
+    }
+
+    /**
+     * @param $event
+     * @return string
+     */
+    private function parseEventIdFromUrl($event)
+    {
+        $eventUri = $event->{'@id'};
+        $uriParts = explode('/', $eventUri);
+        $eventId = array_pop($uriParts);
+
+        return $eventId;
+    }
+
+    /**
+     * @param CalendarRepositoryInterface|null $calendarRepository
+     * @return string
+     */
+    private function longCalendarSummaryFormatter($calendarRepository)
+    {
+        return function ($event) use ($calendarRepository) {
+            // Set the pre-formatted calendar summary as fallback in case no calendar repository was provided.
+            $summary = $event->calendarSummary;
+
+            $calendar = null;
+
+            if ($calendarRepository) {
+                $eventId = $this->parseEventIdFromUrl($event);
+                $calendar = $this->calendarRepository->get($eventId);
+            }
+
+            if ($calendar instanceof \CultureFeed_Cdb_Data_Calendar) {
+                $formatter = new CalendarPlainTextFormatter();
+                $summary = $formatter->format($calendar, 'lg');
+            }
+            return $summary;
         };
     }
 }
