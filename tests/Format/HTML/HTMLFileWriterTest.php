@@ -165,7 +165,6 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                     "description" =>  "familiespel",
                     "copyrightHolder" =>  "Vliegende Hollander"
                 )
-
             ),
         );
 
