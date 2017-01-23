@@ -453,6 +453,29 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function it_should_include_both_a_long_and_short_summary_when_exporting_calendar_info()
+    {
+        $includedProperties = [
+            'id',
+            'calendarSummary'
+        ];
+
+        $event = $this->getJSONEventFromFile('event_with_dates.json');
+        $formatter = new TabularDataEventFormatter($includedProperties);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $expectedFormattedEvent = [
+            'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
+            'calendarSummary.short' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
+            'calendarSummary.long' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
+        ];
+
+        $this->assertEquals($expectedFormattedEvent, $formattedEvent);
+    }
+
+    /**
+     * @test
      * @dataProvider audienceTypesAndToegang
      */
     public function it_should_export_audience_type_as_toegang($event, $toegang)

@@ -182,6 +182,10 @@ class TabularDataEventFormatter
                 'labels.visible',
                 'labels.hidden',
             ],
+            'calendarSummary' => [
+                'calendarSummary.short',
+                'calendarSummary.long',
+            ],
         ];
 
         foreach ($properties as $property) {
@@ -354,8 +358,15 @@ class TabularDataEventFormatter
                 },
                 'property' => 'organizer'
             ],
-            'calendarSummary' => [
-                'name' => 'tijdsinformatie',
+            'calendarSummary.short' => [
+                'name' => 'korte kalendersamenvatting',
+                'include' => function ($event) {
+                    return $event->calendarSummary;
+                },
+                'property' => 'calendarSummary'
+            ],
+            'calendarSummary.long' => [
+                'name' => 'lange kalendersamenvatting',
                 'include' => function ($event) {
                     return $event->calendarSummary;
                 },
