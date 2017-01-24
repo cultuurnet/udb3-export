@@ -3,7 +3,6 @@
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
 use CultuurNet\CalendarSummary\CalendarPlainTextFormatter;
-use CultuurNet\UDB3\Calendar;
 use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
 use CommerceGuys\Intl\Currency\CurrencyRepository;
 use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
@@ -780,6 +779,7 @@ class TabularDataEventFormatter
                 $formatter = new CalendarPlainTextFormatter();
                 $summary = $formatter->format($calendar, 'lg');
             }
+
             return $summary;
         };
     }

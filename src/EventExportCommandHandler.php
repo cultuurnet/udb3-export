@@ -89,7 +89,7 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
         ExportEventsAsOOXML $exportCommand
     ) {
         $this->eventExportService->exportEvents(
-            new OOXMLFileFormat($exportCommand->getInclude(), $this->uitpas),
+            new OOXMLFileFormat($exportCommand->getInclude(), $this->uitpas, $this->calendarRepository),
             $exportCommand->getQuery(),
             $exportCommand->getAddress(),
             $this->logger,
