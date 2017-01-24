@@ -322,10 +322,34 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedFormattedEvent, $formattedEvent);
     }
 
+    /**
+     * @test
+     */
+    public function it_should_include_booking_url_tel_and_email_when_booking_info_is_included()
+    {
+        $includedProperties = [
+            'id',
+            'bookingInfo',
+        ];
+
+        $event = $this->getJSONEventFromFile('event_with_booking_info.json');
+        $formatter = new TabularDataEventFormatter($includedProperties);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $expectedFormattedEvent = [
+            'id' => 'caacf59e-29e7-4787-9197-bf3933e86288',
+            'bookingInfo.url' => 'http://www.museumpas.be/smak',
+            'bookingInfo.phone' => '09987654321',
+            'bookingInfo.email' => 'dirk@du.de',
+        ];
+
+        $this->assertEquals($expectedFormattedEvent, $formattedEvent);
+    }
+
     public function kansentariefEventInfoProvider()
     {
         return [
-            'one card system , sit_distills_event_info_to_what_is_needed_for_html_exportingle tariff' => [
+            'one card system , single tariff' => [
                 'eventInfo' => new EventInfo(
                     [
                         [
