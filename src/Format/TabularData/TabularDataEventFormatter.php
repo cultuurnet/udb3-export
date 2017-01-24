@@ -551,6 +551,26 @@ class TabularDataEventFormatter
                 },
                 'property' => 'contactPoint'
             ],
+            'audience' => [
+                'name' => 'toegang',
+                'include' => function ($event) {
+                    $audienceType = property_exists($event, 'audience') ? $event->audience->audienceType : 'everyone';
+                    $toegangTypes = [
+                        'everyone' => 'Voor iedereen',
+                        'members' => 'Enkel voor leden',
+                        'education' => 'Specifiek voor scholen'
+                    ];
+
+                    $toegang = $toegangTypes['everyone'];
+
+                    if (array_key_exists($audienceType, $toegangTypes)) {
+                        $toegang = $toegangTypes[$audienceType];
+                    }
+
+                    return $toegang;
+                },
+                'property' => 'audience'
+            ]
         ];
     }
 

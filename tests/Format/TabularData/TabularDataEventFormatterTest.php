@@ -423,4 +423,66 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    /**
+     * @test
+     * @dataProvider audienceTypesAndToegang
+     */
+    public function it_should_export_audience_type_as_toegang($event, $toegang)
+    {
+        $includedProperties = ['id', 'audience'];
+
+        $formatter = new TabularDataEventFormatter($includedProperties);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $this->assertEquals($toegang, $formattedEvent['audience']);
+    }
+
+    public function audienceTypesAndToegang()
+    {
+        return [
+            'voor iedereen' => [
+                'offerJson' => json_encode([
+                    '@id' => '4232b0d3-5de2-483d-a693-1ff852250f5d',
+                    'audience' => [
+                        'audienceType' => 'everyone'
+                    ]
+                ]),
+                'toegang' => 'Voor iedereen'
+            ],
+            'enkel voor leden' => [
+                'offerJson' => json_encode([
+                    '@id' => '4232b0d3-5de2-483d-a693-1ff852250f5d',
+                    'audience' => [
+                        'audienceType' => 'members'
+                    ]
+                ]),
+                'toegang' => 'Enkel voor leden'
+            ],
+            'specifiek voor scholen' => [
+                'offerJson' => json_encode([
+                    '@id' => '4232b0d3-5de2-483d-a693-1ff852250f5d',
+                    'audience' => [
+                        'audienceType' => 'education'
+                    ]
+                ]),
+                'toegang' => 'Specifiek voor scholen'
+            ],
+            'unknown audience type' => [
+                'offerJson' => json_encode([
+                    '@id' => '4232b0d3-5de2-483d-a693-1ff852250f5d',
+                    'audience' => [
+                        'audienceType' => 'unknown'
+                    ]
+                ]),
+                'toegang' => 'Voor iedereen'
+            ],
+            'no audience type' => [
+                'offerJson' => json_encode([
+                    '@id' => '4232b0d3-5de2-483d-a693-1ff852250f5d'
+                ]),
+                'toegang' => 'Voor iedereen'
+            ],
+        ];
+    }
 }
