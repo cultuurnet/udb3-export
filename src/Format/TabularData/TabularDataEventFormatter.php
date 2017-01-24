@@ -556,9 +556,9 @@ class TabularDataEventFormatter
                 'include' => function ($event) {
                     $audienceType = property_exists($event, 'audience') ? $event->audience->audienceType : 'everyone';
                     $toegangTypes = [
-                        'everyone' => 'voor iedereen',
-                        'members' => 'enkel voor leden',
-                        'education' => 'specifiek voor scholen'
+                        'everyone' => 'Voor iedereen',
+                        'members' => 'Enkel voor leden',
+                        'education' => 'Specifiek voor scholen'
                     ];
 
                     $toegang = $toegangTypes['everyone'];

@@ -448,7 +448,7 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
                         'audienceType' => 'everyone'
                     ]
                 ]),
-                'toegang' => 'voor iedereen'
+                'toegang' => 'Voor iedereen'
             ],
             'enkel voor leden' => [
                 'offerJson' => json_encode([
@@ -457,7 +457,7 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
                         'audienceType' => 'members'
                     ]
                 ]),
-                'toegang' => 'enkel voor leden'
+                'toegang' => 'Enkel voor leden'
             ],
             'specifiek voor scholen' => [
                 'offerJson' => json_encode([
@@ -466,7 +466,7 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
                         'audienceType' => 'education'
                     ]
                 ]),
-                'toegang' => 'specifiek voor scholen'
+                'toegang' => 'Specifiek voor scholen'
             ],
             'unknown audience type' => [
                 'offerJson' => json_encode([
@@ -475,13 +475,13 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
                         'audienceType' => 'unknown'
                     ]
                 ]),
-                'toegang' => 'voor iedereen'
+                'toegang' => 'Voor iedereen'
             ],
             'no audience type' => [
                 'offerJson' => json_encode([
                     '@id' => '4232b0d3-5de2-483d-a693-1ff852250f5d'
                 ]),
-                'toegang' => 'voor iedereen'
+                'toegang' => 'Voor iedereen'
             ],
         ];
     }
