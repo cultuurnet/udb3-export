@@ -5,6 +5,8 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
+use CommerceGuys\Intl\Currency\CurrencyRepository;
+use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
 use CultuurNet\UDB3\EventExport\FileWriterInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 

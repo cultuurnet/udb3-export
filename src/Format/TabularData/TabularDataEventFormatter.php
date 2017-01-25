@@ -2,6 +2,13 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
+use CommerceGuys\Intl\Currency\CurrencyRepository;
+use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
+use CommerceGuys\Intl\Formatter\NumberFormatter;
+use CommerceGuys\Intl\Formatter\NumberFormatterInterface;
+use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
+use CommerceGuys\Intl\NumberFormat\NumberFormatRepositoryInterface;
+use CultuurNet\Entry\Number;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\PriceFormatter;
 use CultuurNet\UDB3\EventExport\UitpasInfoFormatter;
@@ -32,6 +39,16 @@ class TabularDataEventFormatter
     protected $uitpas;
 
     /**
+     * @var NumberFormatterInterface
+     */
+    protected $currencyFormatter;
+
+    /**
+     * @var CurrencyRepositoryInterface
+     */
+    protected $currencyRepository;
+
+    /**
      * @param string[] $include A list of properties to include
      * @param EventInfoServiceInterface|null $uitpas
      */
@@ -43,6 +60,10 @@ class TabularDataEventFormatter
         $this->includedProperties = $this->includedOrDefaultProperties($include);
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
+
+        $numberFormat = (new NumberFormatRepository())->get('nl-BE');
+        $this->currencyFormatter = new NumberFormatter($numberFormat, NumberFormatter::CURRENCY);
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     public function formatHeader()
@@ -142,6 +163,10 @@ class TabularDataEventFormatter
                 'bookingInfo.phone',
                 'bookingInfo.email',
             ],
+            'bookingInfo.price' => [
+                'bookingInfo.price.base',
+                'bookingInfo.price.all',
+            ]
         ];
 
         foreach ($properties as $property) {
@@ -203,8 +228,8 @@ class TabularDataEventFormatter
                 },
                 'property' => 'creator'
             ],
-            'bookingInfo.price' => [
-                'name' => 'prijs',
+            'bookingInfo.price.base' => [
+                'name' => 'basistarief',
                 'include' => function ($event) {
                     $basePrice = null;
 
@@ -218,6 +243,17 @@ class TabularDataEventFormatter
                     }
 
                     return $basePrice ? $basePrice->price : '';
+                },
+                'property' => 'bookingInfo'
+            ],
+            'bookingInfo.price.all' => [
+                'name' => 'prijsinformatie',
+                'include' => function ($event) {
+                    if (!property_exists($event, 'priceInfo') || !is_array($event->priceInfo)) {
+                        return '';
+                    }
+
+                    return $this->formatPriceInfo($event->priceInfo);
                 },
                 'property' => 'bookingInfo'
             ],
@@ -619,5 +655,41 @@ class TabularDataEventFormatter
                 }
             }
         };
+    }
+
+    /**
+     * @param array $priceInfo
+     * @return string
+     */
+    private function formatPriceInfo($priceInfo)
+    {
+        return array_reduce(
+            $priceInfo,
+            function ($pricing, $tariff) {
+                $formattedTariff = $this->formatTariff(
+                    $this->currencyFormatter,
+                    $this->currencyRepository,
+                    $tariff
+                );
+
+                return $pricing . '; ' . $formattedTariff;
+            },
+            ''
+        );
+    }
+
+    private function formatTariff(
+        NumberFormatterInterface $currencyFormatter,
+        CurrencyRepositoryInterface $currencyRepository,
+        $tariff
+    ){
+        $price = floatval($tariff->price);
+
+        $currencyCode = $tariff->priceCurrency;
+        $currency = $currencyRepository->get($currencyCode);
+
+        $tariffPrice = $currencyFormatter->formatCurrency((string) $price, $currency);
+
+        return $tariff->name . ': ' . $tariffPrice;
     }
 }
