@@ -296,9 +296,11 @@ class HTMLEventFormatter
     private function findMediaByUrl($mediaUrl)
     {
         return function ($matchingMedia, $mediaObject) use ($mediaUrl) {
-            return $matchingMedia
-                ? $matchingMedia
-                : ($mediaObject->contentUrl === $mediaUrl ? $mediaObject : null);
+            if ($matchingMedia) {
+                return $matchingMedia;
+            }
+
+            return $mediaObject->contentUrl === $mediaUrl ? $mediaObject : null;
         };
     }
 }
