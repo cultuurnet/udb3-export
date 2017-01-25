@@ -44,10 +44,8 @@
                 ">
                     {% if event.image -%}
                     <div class="activity__image-container">
-                        {%  if event.image -%}
-                            <img src="{{ event.image }}?width=600&height=600&maxheight=600&crop=auto" class="activity__image" />
-                        {%- endif %}
-
+                        <img src="{{ event.image }}?width=600&height=600&maxheight=600&crop=auto" class="activity__image" />
+                        <span class="activity__image__copyright">&copy; {{ event.mediaObject.copyrightHolder }}</span>
                     </div>
                     {% endif -%}
                     {% if event.ageFrom -%}

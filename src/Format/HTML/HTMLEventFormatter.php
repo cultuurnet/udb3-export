@@ -5,6 +5,7 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
+use Closure;
 use CultuurNet\CalendarSummary\CalendarHTMLFormatter;
 use CultuurNet\UDB3\Event\EventType;
 use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
@@ -115,7 +116,7 @@ class HTMLEventFormatter
         $formattedEvent = [];
 
         if (isset($event->image)) {
-            $formattedEvent['image'] = 'http:' . $event->image;
+            $formattedEvent['image'] = $event->image;
         }
 
         $type = EventType::fromJSONLDEvent($eventString);
@@ -165,6 +166,8 @@ class HTMLEventFormatter
             $ageRange = $event->typicalAgeRange;
             $formattedEvent['ageFrom'] = explode('-', $ageRange)[0];
         }
+
+        $this->addMediaObject($event, $formattedEvent);
 
         return $formattedEvent;
     }
@@ -267,5 +270,37 @@ class HTMLEventFormatter
 
         $formattedEvent['price'] =
             $basePrice ? $this->priceFormatter->format($basePrice->price) : 'Niet ingevoerd';
+    }
+
+    /**
+     * @param stdClass $event
+     * @param array $formattedEvent
+     */
+    private function addMediaObject($event, &$formattedEvent)
+    {
+        if (!property_exists($event, 'image') || !property_exists($event, 'mediaObject')) {
+            return;
+        }
+
+        $mainImage = array_reduce($event->mediaObject, $this->findMediaByUrl($event->image));
+
+        if ($mainImage) {
+            $formattedEvent['mediaObject'] = $mainImage;
+        }
+    }
+
+    /**
+     * @param string $mediaUrl
+     * @return Closure
+     */
+    private function findMediaByUrl($mediaUrl)
+    {
+        return function ($matchingMedia, $mediaObject) use ($mediaUrl) {
+            if ($matchingMedia) {
+                return $matchingMedia;
+            }
+
+            return $mediaObject->contentUrl === $mediaUrl ? $mediaObject : null;
+        };
     }
 }

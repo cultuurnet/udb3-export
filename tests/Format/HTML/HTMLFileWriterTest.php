@@ -135,6 +135,14 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                     'municipality' => 'Aalst',
                 ),
                 'price' => '119,0',
+                'mediaObject' => array(
+                    "@id" =>  "https://io.uitdatabank.be/media/6121edec-7960-48a8-aab5-0ecba1cc48ef",
+                    "@type" =>  "schema:ImageObject",
+                    "contentUrl" =>  "http://media.uitdatabank.be/20140715/p18qn74oth1uvnnpidhj1i6t1f9p1.png",
+                    "thumbnailUrl" =>  "http://media.uitdatabank.be/20140715/p18qn74oth1uvnnpidhj1i6t1f9p1.png",
+                    "description" =>  "De Kortste Nacht",
+                    "copyrightHolder" =>  "Rode Ridder"
+                )
             ),
             array(
                 'image' => 'http://media.uitdatabank.be/20130805/8d455579-2207-4643-bdaf-a514da64697b.JPG',
@@ -149,6 +157,14 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                     'municipality' => 'Antwerpen',
                 ),
                 'price' => 'Gratis',
+                'mediaObject' => array(
+                    "@id" =>  "https://io.uitdatabank.be/media/2f413100-0d9c-43a6-a91b-b8668f1aaad0",
+                    "@type" =>  "schema:ImageObject",
+                    "contentUrl" =>  "http://media.uitdatabank.be/20140715/p18qn74oth1uvnnpidhj1i6t1f9p1.png",
+                    "thumbnailUrl" =>  "http://media.uitdatabank.be/20140715/p18qn74oth1uvnnpidhj1i6t1f9p1.png",
+                    "description" =>  "familiespel",
+                    "copyrightHolder" =>  "Vliegende Hollander"
+                )
             ),
         );
 

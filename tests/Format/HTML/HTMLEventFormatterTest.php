@@ -613,4 +613,28 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(5, $formattedEvent['ageFrom']);
     }
+
+    /**
+     * @test
+     */
+    public function it_should_include_the_media_object_of_the_main_image_when_set()
+    {
+        $event = $this->getJSONEventFromFile('event_with_main_image.json');
+
+        $formattedEvent = $this->eventFormatter->formatEvent(
+            'd1f0e71d-a9a8-4069-81fb-530134502c58',
+            $event
+        );
+
+        $expectedMediaObject = (object) [
+            '@id' =>  'https://io.uitdatabank.be/media/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2',
+            '@type' =>  'schema:ImageObject',
+            'contentUrl' =>  'http://media.uitdatabank.be/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg',
+            'thumbnailUrl' =>  'http://media.uitdatabank.be/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg',
+            'description' =>  'De Kortste Nacht',
+            'copyrightHolder' =>  'Rode Ridder'
+        ];
+
+        $this->assertEquals($expectedMediaObject, $formattedEvent['mediaObject']);
+    }
 }
