@@ -5,6 +5,7 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
+use Closure;
 use CultuurNet\CalendarSummary\CalendarHTMLFormatter;
 use CultuurNet\UDB3\Event\EventType;
 use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
@@ -277,8 +278,27 @@ class HTMLEventFormatter
      */
     private function addMediaObject($event, &$formattedEvent)
     {
-        if (property_exists($event, 'mediaObject')) {
-            $formattedEvent['mediaObject'] = $event->mediaObject[0];
+        if (!property_exists($event, 'image') || !property_exists($event, 'mediaObject')) {
+            return;
         }
+
+        $mainImage = array_reduce($event->mediaObject, $this->findMediaByUrl($event->image));
+
+        if ($mainImage) {
+            $formattedEvent['mediaObject'] = $mainImage;
+        }
+    }
+
+    /**
+     * @param string $mediaUrl
+     * @return Closure
+     */
+    private function findMediaByUrl($mediaUrl)
+    {
+        return function ($matchingMedia, $mediaObject) use ($mediaUrl) {
+            return $matchingMedia
+                ? $matchingMedia
+                : ($mediaObject->contentUrl === $mediaUrl ? $mediaObject : null);
+        };
     }
 }

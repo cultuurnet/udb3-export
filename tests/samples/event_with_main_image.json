@@ -3,8 +3,16 @@
   "@context": "\/api\/1.0\/event.jsonld",
   "name": {"nl": "Koran, kaliefen en kruistochten - De fundamenten van de islam"},
   "description": {"nl": "De islam is niet meer weg te denken uit onze maatschappij. Aan de hand van boeiende anekdotes doet Urbain Vermeulen de ontstaansgeschiedenis van de godsdienst uit de doeken. Hij verklaart hoe de islam zich verhoudt tot de andere wereldgodsdiensten en legt de oorsprong van de fundamentalistische strekkingen bloot. Dit historische perspectief helpt u om actuele ontwikkelingen beter te begrijpen."},
-  "image": "http:\/\/media.uitdatabank.be\/20141211\/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg",
+  "image": "http:\/\/media.uitdatabank.be\/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg",
   "mediaObject": [
+    {
+      "@id": "https:\/\/io.uitdatabank.be\/media\/f3fc09e8-84e9-4f58-9956-db769ff022ca",
+      "@type": "schema:ImageObject",
+      "contentUrl": "http:\/\/media.uitdatabank.be\/f3fc09e8-84e9-4f58-9956-db769ff022ca.jpg",
+      "thumbnailUrl": "http:\/\/media.uitdatabank.be\/f3fc09e8-84e9-4f58-9956-db769ff022ca.jpg",
+      "description": "historisch perspectief",
+      "copyrightHolder": "Urbain Vermeulen"
+    },
     {
       "@id": "https:\/\/io.uitdatabank.be\/media\/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2",
       "@type": "schema:ImageObject",
@@ -12,6 +20,14 @@
       "thumbnailUrl": "http:\/\/media.uitdatabank.be\/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg",
       "description": "De Kortste Nacht",
       "copyrightHolder": "Rode Ridder"
+    },
+    {
+      "@id": "https:\/\/io.uitdatabank.be\/media\/0939ff98-7325-4d9c-814e-fb10194c4dbc",
+      "@type": "schema:ImageObject",
+      "contentUrl": "http:\/\/media.uitdatabank.be\/0939ff98-7325-4d9c-814e-fb10194c4dbc.jpg",
+      "thumbnailUrl": "http:\/\/media.uitdatabank.be\/0939ff98-7325-4d9c-814e-fb10194c4dbc.jpg",
+      "description": "historisch perspectief",
+      "copyrightHolder": "Urbain Vermeulen"
     }
   ],
   "calendarSummary": "ma 02\/03\/15 van 13:30 tot 16:30  ma 09\/03\/15 van 13:30 tot 16:30  ma 16\/03\/15 van 13:30 tot 16:30  ma 23\/03\/15 van 13:30 tot 16:30  ma 30\/03\/15 van 13:30 tot 16:30 ",
