@@ -213,9 +213,9 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
         $expectedFormatting = array(
             "id" =>"16744083-859a-4d3d-bd1d-16ea5bd3e2a3",
-            "contactPoint.email" => "nicolas.leroy+test@gmail.com\r\njane.doe@example.com",
-            "contactPoint.phone" => "016 66 69 99\r\n016 99 96 66",
-            "contactPoint.url" => "http://contact.example.com\r\nhttps://contact.example.com",
+            "contactPoint.email" => "nicolas.leroy+test@gmail.com;jane.doe@example.com",
+            "contactPoint.phone" => "016 66 69 99;016 99 96 66",
+            "contactPoint.url" => "http://contact.example.com;https://contact.example.com",
         );
 
         $this->assertEquals($expectedFormatting, $formattedEvent);

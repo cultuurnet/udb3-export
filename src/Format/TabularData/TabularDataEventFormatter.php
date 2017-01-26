@@ -586,7 +586,7 @@ class TabularDataEventFormatter
     private function listJsonldProperty($jsonldData, $propertyName)
     {
         if (property_exists($jsonldData, $propertyName)) {
-            return implode("\r\n", $jsonldData->{$propertyName});
+            return implode(';', $jsonldData->{$propertyName});
         } else {
             return '';
         }
