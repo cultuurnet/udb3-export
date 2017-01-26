@@ -142,6 +142,10 @@ class TabularDataEventFormatter
                 'bookingInfo.phone',
                 'bookingInfo.email',
             ],
+            'labels' => [
+                'labels.visible',
+                'labels.hidden',
+            ]
         ];
 
         foreach ($properties as $property) {
@@ -306,11 +310,20 @@ class TabularDataEventFormatter
                 },
                 'property' => 'calendarSummary'
             ],
-            'labels' => [
+            'labels.visible' => [
                 'name' => 'labels',
                 'include' => function ($event) {
                     if (isset($event->labels)) {
                         return implode(';', $event->labels);
+                    }
+                },
+                'property' => 'labels'
+            ],
+            'labels.hidden' => [
+                'name' => 'verborgen labels',
+                'include' => function ($event) {
+                    if (isset($event->hiddenLabels)) {
+                        return implode(';', $event->hiddenLabels);
                     }
                 },
                 'property' => 'labels'
