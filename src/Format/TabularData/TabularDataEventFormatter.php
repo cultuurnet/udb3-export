@@ -64,7 +64,7 @@ class TabularDataEventFormatter
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
 
-        $numberFormat = (new NumberFormatRepository())->get('nl');
+        $numberFormat = (new NumberFormatRepository())->get('nl-BE');
         $this->basePriceFormatter = (new NumberFormatter($numberFormat))->setMinimumFractionDigits(2);
         $this->currencyFormatter = new NumberFormatter($numberFormat, NumberFormatter::CURRENCY);
         $this->currencyRepository = new CurrencyRepository();
