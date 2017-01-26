@@ -501,7 +501,7 @@ class TabularDataEventFormatter
                 'property' => 'sameAs'
             ],
             'contactPoint.email' => [
-                'name' => 'e-mail',
+                'name' => 'contact e-mail',
                 'include' => function ($event) use ($contactPoint) {
                     return $this->listJsonldProperty(
                         $contactPoint($event),
@@ -511,7 +511,7 @@ class TabularDataEventFormatter
                 'property' => 'contactPoint'
             ],
             'contactPoint.phone' => [
-                'name' => 'telefoon',
+                'name' => 'contact tel',
                 'include' => function ($event) use ($contactPoint) {
                     return $this->listJsonldProperty(
                         $contactPoint($event),
@@ -521,7 +521,7 @@ class TabularDataEventFormatter
                 'property' => 'contactPoint'
             ],
             'contactPoint.url' => [
-                'name' => 'url',
+                'name' => 'contact url',
                 'include' => function ($event) use ($contactPoint) {
                     return $this->listJsonldProperty(
                         $contactPoint($event),
