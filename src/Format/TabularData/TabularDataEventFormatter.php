@@ -7,8 +7,6 @@ use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
 use CommerceGuys\Intl\Formatter\NumberFormatter;
 use CommerceGuys\Intl\Formatter\NumberFormatterInterface;
 use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
-use CommerceGuys\Intl\NumberFormat\NumberFormatRepositoryInterface;
-use CultuurNet\Entry\Number;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\PriceFormatter;
 use CultuurNet\UDB3\EventExport\UitpasInfoFormatter;
@@ -44,6 +42,11 @@ class TabularDataEventFormatter
     protected $currencyFormatter;
 
     /**
+     * @var NumberFormatterInterface
+     */
+    protected $basePriceFormatter;
+
+    /**
      * @var CurrencyRepositoryInterface
      */
     protected $currencyRepository;
@@ -61,7 +64,8 @@ class TabularDataEventFormatter
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
 
-        $numberFormat = (new NumberFormatRepository())->get('nl-BE');
+        $numberFormat = (new NumberFormatRepository())->get('nl');
+        $this->basePriceFormatter = (new NumberFormatter($numberFormat))->setMinimumFractionDigits(2);
         $this->currencyFormatter = new NumberFormatter($numberFormat, NumberFormatter::CURRENCY);
         $this->currencyRepository = new CurrencyRepository();
     }
@@ -242,7 +246,7 @@ class TabularDataEventFormatter
                         }
                     }
 
-                    return $basePrice ? $basePrice->price : '';
+                    return $basePrice ? $this->basePriceFormatter->format($basePrice->price) : '';
                 },
                 'property' => 'bookingInfo'
             ],
@@ -663,32 +667,17 @@ class TabularDataEventFormatter
      */
     private function formatPriceInfo($priceInfo)
     {
-        return array_reduce(
-            $priceInfo,
-            function ($pricing, $tariff) {
-                $formattedTariff = $this->formatTariff(
-                    $this->currencyFormatter,
-                    $this->currencyRepository,
-                    $tariff
-                );
-
-                return $pricing . '; ' . $formattedTariff;
-            },
-            ''
-        );
+        return implode('; ', array_map([$this, 'formatTariff'], $priceInfo));
     }
 
-    private function formatTariff(
-        NumberFormatterInterface $currencyFormatter,
-        CurrencyRepositoryInterface $currencyRepository,
-        $tariff
-    ){
+    private function formatTariff($tariff)
+    {
         $price = floatval($tariff->price);
 
         $currencyCode = $tariff->priceCurrency;
-        $currency = $currencyRepository->get($currencyCode);
+        $currency = $this->currencyRepository->get($currencyCode);
 
-        $tariffPrice = $currencyFormatter->formatCurrency((string) $price, $currency);
+        $tariffPrice = $this->currencyFormatter->formatCurrency((string) $price, $currency);
 
         return $tariff->name . ': ' . $tariffPrice;
     }

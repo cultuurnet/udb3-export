@@ -302,8 +302,9 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
      * @test
      *
      * @group issue-III-1533
+     * @group issue-III-1790
      */
-    public function it_adds_base_price()
+    public function it_adds_base_price_and_all_other_pricing_in_when_formatting_bookingInfo_price()
     {
         $includedProperties = [
             'id',
@@ -316,7 +317,33 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
         $expectedFormattedEvent = [
             'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
-            'bookingInfo.price' => '10.5',
+            'bookingInfo.price.base' => '10,50',
+            'bookingInfo.price.all' => 'Basistarief: € 10,50; Senioren: € 0,00',
+        ];
+
+        $this->assertEquals($expectedFormattedEvent, $formattedEvent);
+    }
+
+    /**
+     * @test
+     *
+     * @group issue-III-1790
+     */
+    public function it_ignores_price_info_when_no_bookingInfo_is_set()
+    {
+        $includedProperties = [
+            'id',
+            'bookingInfo.price'
+        ];
+
+        $event = $this->getJSONEventFromFile('event_without_bookinginfo.json');
+        $formatter = new TabularDataEventFormatter($includedProperties);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $expectedFormattedEvent = [
+            'id' => '405a0c6a-c48f-4c5f-960c-df337237b9d6',
+            'bookingInfo.price.base' => '',
+            'bookingInfo.price.all' => '',
         ];
 
         $this->assertEquals($expectedFormattedEvent, $formattedEvent);
