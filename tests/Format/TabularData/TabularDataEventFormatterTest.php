@@ -518,7 +518,7 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
      *
      * @group issue-III-1791
      */
-    public function it_should_format_labels_separately_based_on_visibility()
+    public function it_formats_labels_separately_based_on_visibility()
     {
         $includedProperties = [
             'id',
