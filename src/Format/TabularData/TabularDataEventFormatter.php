@@ -3,6 +3,8 @@
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
+use CultuurNet\UDB3\EventExport\Media\MediaFinder;
+use CultuurNet\UDB3\EventExport\Media\Url;
 use CultuurNet\UDB3\EventExport\PriceFormatter;
 use CultuurNet\UDB3\EventExport\UitpasInfoFormatter;
 use CultuurNet\UDB3\StringFilter\StripHtmlStringFilter;
@@ -142,6 +144,11 @@ class TabularDataEventFormatter
                 'bookingInfo.phone',
                 'bookingInfo.email',
             ],
+            'image' => [
+                'image.url',
+                'image.description',
+                'image.copyrightHolder',
+            ]
         ];
 
         foreach ($properties as $property) {
@@ -478,11 +485,19 @@ class TabularDataEventFormatter
                 },
                 'property' => 'address.addressCountry'
             ],
-            'image' => [
-                'name' => 'afbeelding',
-                'include' => function ($event) {
-                    return !empty($event->image) ? $event->image : '';
-                },
+            'image.url' => [
+                'name' => 'afbeelding URL',
+                'include' => $this->includeMainImageInfo('contentUrl'),
+                'property' => 'image'
+            ],
+            'image.description' => [
+                'name' => 'afbeelding beschrijving',
+                'include' => $this->includeMainImageInfo('description'),
+                'property' => 'image'
+            ],
+            'image.copyrightHolder' => [
+                'name' => 'afbeelding copyright',
+                'include' => $this->includeMainImageInfo('copyrightHolder'),
                 'property' => 'image'
             ],
             'sameAs' => [
@@ -618,6 +633,21 @@ class TabularDataEventFormatter
                     return $bookingInfo->{$propertyName};
                 }
             }
+        };
+    }
+
+    /**
+     * @param string $propertyName
+     * @return \Closure
+     */
+    private function includeMainImageInfo($propertyName)
+    {
+        return function ($event) use ($propertyName) {
+            if (!property_exists($event, 'image') || !property_exists($event, 'mediaObject')) {
+                return '';
+            }
+            $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
+            return $mainImage ? $mainImage->{$propertyName} : '';
         };
     }
 }

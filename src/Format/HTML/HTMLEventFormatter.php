@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- */
-
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
 use Closure;
@@ -20,6 +16,8 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Properties\TaalicoonDescription;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\PriceFormatter;
 use CultuurNet\UDB3\EventExport\UitpasInfoFormatter;
+use CultuurNet\UDB3\EventExport\Media\MediaFinder;
+use CultuurNet\UDB3\EventExport\Media\Url;
 use CultuurNet\UDB3\StringFilter\CombinedStringFilter;
 use CultuurNet\UDB3\StringFilter\StripHtmlStringFilter;
 use CultuurNet\UDB3\StringFilter\TruncateStringFilter;
@@ -282,25 +280,10 @@ class HTMLEventFormatter
             return;
         }
 
-        $mainImage = array_reduce($event->mediaObject, $this->findMediaByUrl($event->image));
+        $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
 
         if ($mainImage) {
             $formattedEvent['mediaObject'] = $mainImage;
         }
-    }
-
-    /**
-     * @param string $mediaUrl
-     * @return Closure
-     */
-    private function findMediaByUrl($mediaUrl)
-    {
-        return function ($matchingMedia, $mediaObject) use ($mediaUrl) {
-            if ($matchingMedia) {
-                return $matchingMedia;
-            }
-
-            return $mediaObject->contentUrl === $mediaUrl ? $mediaObject : null;
-        };
     }
 }

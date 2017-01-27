@@ -190,8 +190,8 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
         $formatter = new TabularDataEventFormatter(array('image'));
         $formattedEvent = $formatter->formatEvent($event);
 
-        $this->assertTrue(isset($formattedEvent['image']));
-        $this->assertEmpty($formattedEvent['image']);
+        $this->assertTrue(isset($formattedEvent['image.url']));
+        $this->assertEmpty($formattedEvent['image.url']);
     }
 
     /**
@@ -484,5 +484,28 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
                 'toegang' => 'Voor iedereen'
             ],
         ];
+    }
+
+    /**
+     * @test
+     *
+     * @group issue-III-1793
+     */
+    public function it_should_format_image_url_description_and_copyright_when_image_is_included()
+    {
+        $includedProperties = ['id', 'image'];
+
+        $event = $this->getJSONEventFromFile('event_with_main_image.json');
+        $formatter = new TabularDataEventFormatter($includedProperties);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $expectedFormattedEvent = [
+            'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
+            'image.url' => 'http://media.uitdatabank.be/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg',
+            'image.description' => 'De Kortste Nacht',
+            'image.copyrightHolder' => 'Rode Ridder',
+        ];
+
+        $this->assertEquals($expectedFormattedEvent, $formattedEvent);
     }
 }
