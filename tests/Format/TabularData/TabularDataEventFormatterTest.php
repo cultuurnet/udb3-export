@@ -512,4 +512,29 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    /**
+     * @test
+     *
+     * @group issue-III-1791
+     */
+    public function it_formats_labels_separately_based_on_visibility()
+    {
+        $includedProperties = [
+            'id',
+            'labels',
+        ];
+
+        $event = $this->getJSONEventFromFile('event_with_visible_and_hidden_labels.json');
+        $formatter = new TabularDataEventFormatter($includedProperties);
+        $formattedEvent = $formatter->formatEvent($event);
+
+        $expectedFormattedEvent = [
+            'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
+            'labels.visible' => 'green;purple',
+            'labels.hidden' => 'orange;red',
+        ];
+
+        $this->assertEquals($expectedFormattedEvent, $formattedEvent);
+    }
 }
