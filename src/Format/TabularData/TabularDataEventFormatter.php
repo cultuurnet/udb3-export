@@ -167,9 +167,9 @@ class TabularDataEventFormatter
                 'bookingInfo.phone',
                 'bookingInfo.email',
             ],
-            'bookingInfo.price' => [
-                'bookingInfo.price.base',
-                'bookingInfo.price.all',
+            'priceInfo' => [
+                'priceInfo.base',
+                'priceInfo.all',
             ]
         ];
 
@@ -232,7 +232,7 @@ class TabularDataEventFormatter
                 },
                 'property' => 'creator'
             ],
-            'bookingInfo.price.base' => [
+            'priceInfo.base' => [
                 'name' => 'basistarief',
                 'include' => function ($event) {
                     $basePrice = null;
@@ -248,9 +248,9 @@ class TabularDataEventFormatter
 
                     return $basePrice ? $this->basePriceFormatter->format($basePrice->price) : '';
                 },
-                'property' => 'bookingInfo'
+                'property' => 'priceInfo'
             ],
-            'bookingInfo.price.all' => [
+            'priceInfo.all' => [
                 'name' => 'prijsinformatie',
                 'include' => function ($event) {
                     if (!property_exists($event, 'priceInfo') || !is_array($event->priceInfo)) {
@@ -259,7 +259,7 @@ class TabularDataEventFormatter
 
                     return $this->formatPriceInfo($event->priceInfo);
                 },
-                'property' => 'bookingInfo'
+                'property' => 'priceInfo'
             ],
             'kansentarief' => [
                 'name' => 'kansentarief',

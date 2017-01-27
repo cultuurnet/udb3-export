@@ -304,11 +304,11 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
      * @group issue-III-1533
      * @group issue-III-1790
      */
-    public function it_adds_base_price_and_all_other_pricing_in_when_formatting_bookingInfo_price()
+    public function it_adds_base_price_and_all_other_pricing_in_when_formatting_priceInfo()
     {
         $includedProperties = [
             'id',
-            'bookingInfo.price'
+            'priceInfo'
         ];
 
         $event = $this->getJSONEventFromFile('event_with_price.json');
@@ -317,8 +317,8 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
         $expectedFormattedEvent = [
             'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
-            'bookingInfo.price.base' => '10,50',
-            'bookingInfo.price.all' => 'Basistarief: 10,50 €; Senioren: 0,00 €',
+            'priceInfo.base' => '10,50',
+            'priceInfo.all' => 'Basistarief: 10,50 €; Senioren: 0,00 €',
         ];
 
         $this->assertEquals($expectedFormattedEvent, $formattedEvent);
@@ -329,21 +329,21 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
      *
      * @group issue-III-1790
      */
-    public function it_ignores_price_info_when_no_bookingInfo_is_set()
+    public function it_ignores_price_info_when_no_priceInfo_is_set()
     {
         $includedProperties = [
             'id',
-            'bookingInfo.price'
+            'priceInfo'
         ];
 
-        $event = $this->getJSONEventFromFile('event_without_bookinginfo.json');
+        $event = $this->getJSONEventFromFile('event_without_priceinfo.json');
         $formatter = new TabularDataEventFormatter($includedProperties);
         $formattedEvent = $formatter->formatEvent($event);
 
         $expectedFormattedEvent = [
             'id' => '405a0c6a-c48f-4c5f-960c-df337237b9d6',
-            'bookingInfo.price.base' => '',
-            'bookingInfo.price.all' => '',
+            'priceInfo.base' => '',
+            'priceInfo.all' => '',
         ];
 
         $this->assertEquals($expectedFormattedEvent, $formattedEvent);
