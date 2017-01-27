@@ -101,7 +101,7 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function it_indicates_if_price_is_unknown()
     {
-        $eventWithoutBookingInfo = $this->getFormattedEventFromJSONFile('event_without_bookinginfo.json');
+        $eventWithoutBookingInfo = $this->getFormattedEventFromJSONFile('event_without_priceinfo.json');
         $expectedFormattedEvent = [
             'image' => 'http://media.uitdatabank.be/20141211/558bb7cf-5ff8-40b4-872b-5f5b46bb16c2.jpg',
             'type' => 'Cursus of workshop',
