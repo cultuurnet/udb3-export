@@ -168,8 +168,8 @@ class TabularDataEventFormatter
                 'bookingInfo.email',
             ],
             'priceInfo' => [
-                    'priceInfo.base',
-                    'priceInfo.all',
+                'priceInfo.base',
+                'priceInfo.all',
             ],
             'labels' => [
                 'labels.visible',
