@@ -283,15 +283,19 @@ class TabularDataEventFormatter
                     if ($uitpasInfo) {
                         $uitpasInfo = $this->uitpasInfoFormatter->format($uitpasInfo);
 
-                        $cardSystems = array_reduce($uitpasInfo['prices'], function ($cardSystems, $tariff) {
-                            $cardSystem = isset($cardSystems[$tariff['cardSystem']]) ? $cardSystems[$tariff['cardSystem']] : '';
-                            $cardSystem = empty($cardSystem)
-                                ? $tariff['cardSystem'] .': € ' . $tariff['price']
-                                : $cardSystem . ' / € ' . $tariff['price'];
+                        $cardSystems = array_reduce(
+                            $uitpasInfo['prices'],
+                            function ($cardSystems, $tariff) {
+                                $cardSystem = isset($cardSystems[$tariff['cardSystem']]) ? $cardSystems[$tariff['cardSystem']] : '';
+                                $cardSystem = empty($cardSystem)
+                                    ? $tariff['cardSystem'] .': € ' . $tariff['price']
+                                    : $cardSystem . ' / € ' . $tariff['price'];
 
-                            $cardSystems[$tariff['cardSystem']] = $cardSystem;
-                            return $cardSystems;
-                        }, []);
+                                $cardSystems[$tariff['cardSystem']] = $cardSystem;
+                                return $cardSystems;
+                            },
+                            []
+                        );
 
                         $formattedTariffs = array_reduce($cardSystems, function ($tariffs, $cardSystemPrices) {
                             return $tariffs ? $tariffs . ' | ' . $cardSystemPrices : $cardSystemPrices;
@@ -717,9 +721,7 @@ class TabularDataEventFormatter
     private function includeMainImageInfo($propertyName)
     {
         return function ($event) use ($propertyName) {
-            if (!property_exists($event, 'image') || !property_exists($event,
-                    'mediaObject')
-            ) {
+            if (!property_exists($event, 'image') || !property_exists($event, 'mediaObject')) {
                 return '';
             }
             $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
