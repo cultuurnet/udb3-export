@@ -280,7 +280,8 @@ class HTMLEventFormatter
             return;
         }
 
-        $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
+        $mediaFinder = new MediaFinder(new Url($event->image));
+        $mainImage = $mediaFinder->find($event->mediaObject);
 
         if ($mainImage) {
             $formattedEvent['mediaObject'] = $mainImage;
