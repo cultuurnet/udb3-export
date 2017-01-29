@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Media;
 
 use stdClass;
+use Webmozart\Assert\Assert;
 
 class Url implements MediaSpecificationInterface
 {
@@ -17,6 +18,7 @@ class Url implements MediaSpecificationInterface
      */
     public function __construct($url)
     {
+        Assert::stringNotEmpty($url);
         $this->url = $url;
     }
 
@@ -26,6 +28,7 @@ class Url implements MediaSpecificationInterface
      */
     public function matches($mediaObject)
     {
+        Assert::object($mediaObject);
         return $mediaObject->contentUrl === $this->url;
     }
 }
