@@ -26,7 +26,7 @@ class MediaFinder
      *
      * @return stdClass|null
      */
-    public function find($media)
+    public function find(array $media)
     {
         $specification = $this->specification;
         return array_reduce(
