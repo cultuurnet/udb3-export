@@ -34,7 +34,7 @@ class JSONLDEventFormatter
 
             // We include bookingInfo if one of its properties is wanted.
             $includedBookingInfoProperties = array_intersect(
-                ['bookingInfo.price', 'bookingInfo.url'],
+                ['bookingInfo.url'],
                 $include
             );
             if (!empty($includedBookingInfoProperties) &&

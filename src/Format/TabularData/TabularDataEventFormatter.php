@@ -2,6 +2,11 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
+use CommerceGuys\Intl\Currency\CurrencyRepository;
+use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
+use CommerceGuys\Intl\Formatter\NumberFormatter;
+use CommerceGuys\Intl\Formatter\NumberFormatterInterface;
+use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\Media\MediaFinder;
 use CultuurNet\UDB3\EventExport\Media\Url;
@@ -34,6 +39,21 @@ class TabularDataEventFormatter
     protected $uitpas;
 
     /**
+     * @var NumberFormatterInterface
+     */
+    protected $currencyFormatter;
+
+    /**
+     * @var NumberFormatterInterface
+     */
+    protected $basePriceFormatter;
+
+    /**
+     * @var CurrencyRepositoryInterface
+     */
+    protected $currencyRepository;
+
+    /**
      * @param string[] $include A list of properties to include
      * @param EventInfoServiceInterface|null $uitpas
      */
@@ -45,6 +65,11 @@ class TabularDataEventFormatter
         $this->includedProperties = $this->includedOrDefaultProperties($include);
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
+
+        $numberFormat = (new NumberFormatRepository())->get('nl-BE');
+        $this->basePriceFormatter = (new NumberFormatter($numberFormat))->setMinimumFractionDigits(2);
+        $this->currencyFormatter = new NumberFormatter($numberFormat, NumberFormatter::CURRENCY);
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     public function formatHeader()
@@ -148,7 +173,15 @@ class TabularDataEventFormatter
                 'image.url',
                 'image.description',
                 'image.copyrightHolder',
-            ]
+            ],
+            'priceInfo' => [
+                'priceInfo.base',
+                'priceInfo.all',
+            ],
+            'labels' => [
+                'labels.visible',
+                'labels.hidden',
+            ],
         ];
 
         foreach ($properties as $property) {
@@ -210,8 +243,8 @@ class TabularDataEventFormatter
                 },
                 'property' => 'creator'
             ],
-            'bookingInfo.price' => [
-                'name' => 'prijs',
+            'priceInfo.base' => [
+                'name' => 'basistarief',
                 'include' => function ($event) {
                     $basePrice = null;
 
@@ -224,9 +257,20 @@ class TabularDataEventFormatter
                         }
                     }
 
-                    return $basePrice ? $basePrice->price : '';
+                    return $basePrice ? $this->basePriceFormatter->format($basePrice->price) : '';
                 },
-                'property' => 'bookingInfo'
+                'property' => 'priceInfo'
+            ],
+            'priceInfo.all' => [
+                'name' => 'prijsinformatie',
+                'include' => function ($event) {
+                    if (!property_exists($event, 'priceInfo') || !is_array($event->priceInfo)) {
+                        return '';
+                    }
+
+                    return $this->formatPriceInfo($event->priceInfo);
+                },
+                'property' => 'priceInfo'
             ],
             'kansentarief' => [
                 'name' => 'kansentarief',
@@ -313,11 +357,20 @@ class TabularDataEventFormatter
                 },
                 'property' => 'calendarSummary'
             ],
-            'labels' => [
+            'labels.visible' => [
                 'name' => 'labels',
                 'include' => function ($event) {
                     if (isset($event->labels)) {
                         return implode(';', $event->labels);
+                    }
+                },
+                'property' => 'labels'
+            ],
+            'labels.hidden' => [
+                'name' => 'verborgen labels',
+                'include' => function ($event) {
+                    if (isset($event->hiddenLabels)) {
+                        return implode(';', $event->hiddenLabels);
                     }
                 },
                 'property' => 'labels'
@@ -516,7 +569,7 @@ class TabularDataEventFormatter
                 'property' => 'sameAs'
             ],
             'contactPoint.email' => [
-                'name' => 'e-mail',
+                'name' => 'contact e-mail',
                 'include' => function ($event) use ($contactPoint) {
                     return $this->listJsonldProperty(
                         $contactPoint($event),
@@ -526,7 +579,7 @@ class TabularDataEventFormatter
                 'property' => 'contactPoint'
             ],
             'contactPoint.phone' => [
-                'name' => 'telefoon',
+                'name' => 'contact tel',
                 'include' => function ($event) use ($contactPoint) {
                     return $this->listJsonldProperty(
                         $contactPoint($event),
@@ -536,7 +589,7 @@ class TabularDataEventFormatter
                 'property' => 'contactPoint'
             ],
             'contactPoint.url' => [
-                'name' => 'url',
+                'name' => 'contact url',
                 'include' => function ($event) use ($contactPoint) {
                     return $this->listJsonldProperty(
                         $contactPoint($event),
@@ -601,7 +654,7 @@ class TabularDataEventFormatter
     private function listJsonldProperty($jsonldData, $propertyName)
     {
         if (property_exists($jsonldData, $propertyName)) {
-            return implode("\r\n", $jsonldData->{$propertyName});
+            return implode(';', $jsonldData->{$propertyName});
         } else {
             return '';
         }
@@ -637,13 +690,36 @@ class TabularDataEventFormatter
     }
 
     /**
+     * @param array $priceInfo
+     * @return string
+     */
+    private function formatPriceInfo($priceInfo)
+    {
+        return implode('; ', array_map([$this, 'formatTariff'], $priceInfo));
+    }
+
+    private function formatTariff($tariff)
+    {
+        $price = floatval($tariff->price);
+
+        $currencyCode = $tariff->priceCurrency;
+        $currency = $this->currencyRepository->get($currencyCode);
+
+        $tariffPrice = $this->currencyFormatter->formatCurrency((string) $price, $currency);
+
+        return $tariff->name . ': ' . $tariffPrice;
+    }
+
+    /**
      * @param string $propertyName
      * @return \Closure
      */
     private function includeMainImageInfo($propertyName)
     {
         return function ($event) use ($propertyName) {
-            if (!property_exists($event, 'image') || !property_exists($event, 'mediaObject')) {
+            if (!property_exists($event, 'image') || !property_exists($event,
+                    'mediaObject')
+            ) {
                 return '';
             }
             $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
