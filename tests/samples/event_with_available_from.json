@@ -7,7 +7,7 @@
   "description":{
     "nl":"<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do\neiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim\nad minim veniam, quis nostrud exercitation ullamco laboris nisi ut\naliquip ex ea commodo consequat. Duis aute irure dolor in\nreprehenderit in voluptate velit esse cillum dolore eu fugiat nulla\npariatur.<\/p>"
   },
-  "available":"2015-10-13T00:00:00+02:00",
+  "availableFrom":"2015-10-13T00:00:00+02:00",
   "calendarSummary":null,
   "location":{
     "@type":"Place",

@@ -460,8 +460,8 @@ class TabularDataEventFormatter
             'available' => [
                 'name' => 'embargodatum',
                 'include' => function ($event) {
-                    if (!empty($event->available)) {
-                        return $this->formatDateWithoutTime($event->available);
+                    if (!empty($event->availableFrom)) {
+                        return $this->formatDateWithoutTime($event->availableFrom);
                     } else {
                         return '';
                     }
