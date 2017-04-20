@@ -11,7 +11,7 @@
     "cultuurnet/udb3": "~0.1",
     "gridonic/princexml-php": "~1.1.1",
     "psr/log": "~1.0",
-    "nicolopignatelli/valueobjects": "~3.0",
+    "cultuurnet/valueobjects": "~3.0",
     "phpoffice/phpexcel": "~1.8",
     "twig/twig": "~1.0",
     "league/flysystem": "~1.0",
