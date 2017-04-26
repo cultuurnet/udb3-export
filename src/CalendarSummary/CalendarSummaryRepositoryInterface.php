@@ -2,8 +2,6 @@
 
 namespace CultuurNet\UDB3\EventExport\CalendarSummary;
 
-use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryGoneException;
-
 interface CalendarSummaryRepositoryInterface
 {
     /**
@@ -12,8 +10,9 @@ interface CalendarSummaryRepositoryInterface
      * @param Format $format
      *
      * @return string|null
+     *
      * @throws UnsupportedContentTypeException
-     * @throws SummaryGoneException
+     * @throws SummaryUnavailableException
      */
     public function get($offerId, ContentType $type, Format $format);
 }

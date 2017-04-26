@@ -2,7 +2,7 @@
 
 namespace CultuurNet\UDB3\EventExport\CalendarSummary;
 
-class SummaryGoneException extends \Exception
+class SummaryUnavailableException extends \Exception
 {
 
 }

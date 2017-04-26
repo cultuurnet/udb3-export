@@ -14,7 +14,7 @@ use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\HasVliegBrand;
 use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
 use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
-use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryGoneException;
+use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryUnavailableException;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\TaalicoonDescription;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\PriceFormatter;
@@ -186,7 +186,7 @@ class HTMLEventFormatter
         if ($this->calendarSummaryRepository) {
             try {
                 $calendarSummary = $this->calendarSummaryRepository->get($eventId, ContentType::HTML(), Format::LARGE());
-            } catch (SummaryGoneException $exception) {
+            } catch (SummaryUnavailableException $exception) {
                 //TODO: Log the missing summaries.
             };
         }

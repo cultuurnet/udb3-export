@@ -10,7 +10,7 @@ use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
 use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
 use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
-use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryGoneException;
+use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryUnavailableException;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\Media\MediaFinder;
 use CultuurNet\UDB3\EventExport\Media\Url;
@@ -773,7 +773,7 @@ class TabularDataEventFormatter
             if ($calendarSummaryRepository) {
                 try {
                     $calendarSummary = $calendarSummaryRepository->get($eventId, ContentType::PLAIN(), Format::LARGE());
-                } catch (SummaryGoneException $exception) {
+                } catch (SummaryUnavailableException $exception) {
                     //TODO: Log the missing summaries.
                 };
             }
