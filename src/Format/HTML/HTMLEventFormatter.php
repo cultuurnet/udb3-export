@@ -3,9 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
 use Closure;
-use CultuurNet\CalendarSummary\CalendarHTMLFormatter;
 use CultuurNet\UDB3\Event\EventType;
-use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\EventSpecificationInterface;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\Has1Taalicoon;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\Has2Taaliconen;
@@ -13,6 +11,10 @@ use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\Has3Taaliconen;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\Has4Taaliconen;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\HasUiTPASBrand;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\HasVliegBrand;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
+use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
+use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryGoneException;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\TaalicoonDescription;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\PriceFormatter;
@@ -57,20 +59,20 @@ class HTMLEventFormatter
     protected $uitpasInfoFormatter;
 
     /**
-     * @var CalendarRepositoryInterface
+     * @var CalendarSummaryRepositoryInterface|null
      */
-    protected $calendarRepository;
+    protected $calendarSummaryRepository;
 
     /**
      * @param EventInfoServiceInterface|null $uitpas
-     * @param CalendarRepositoryInterface $calendarRepository
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      */
     public function __construct(
         EventInfoServiceInterface $uitpas = null,
-        CalendarRepositoryInterface $calendarRepository = null
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
         $this->uitpas = $uitpas;
-        $this->calendarRepository = $calendarRepository;
+        $this->calendarSummaryRepository = $calendarSummaryRepository;
 
         $this->priceFormatter = new PriceFormatter(2, ',', '.', 'Gratis');
 
@@ -172,25 +174,24 @@ class HTMLEventFormatter
     }
 
     /**
+     * Adds the calendar info by trying to fetch the large summary.
+     * If the large formatted summary is missing, the summary that is available on the event will be used as fallback.
+     *
      * @param string $eventId
      * @param stdClass $event
      * @param array $formattedEvent
      */
     private function addCalendarInfo($eventId, stdClass $event, array &$formattedEvent)
     {
-        // Set the pre-formatted calendar summary as fallback in case no calendar repository was provided.
-        $formattedEvent['dates'] = $event->calendarSummary;
-
-        $calendar = null;
-
-        if ($this->calendarRepository) {
-            $calendar = $this->calendarRepository->get($eventId);
+        if ($this->calendarSummaryRepository) {
+            try {
+                $calendarSummary = $this->calendarSummaryRepository->get($eventId, ContentType::HTML(), Format::LARGE());
+            } catch (SummaryGoneException $exception) {
+                //TODO: Log the missing summaries.
+            };
         }
 
-        if ($calendar instanceof \CultureFeed_Cdb_Data_Calendar) {
-            $formatter = new CalendarHTMLFormatter();
-            $formattedEvent['dates'] = $formatter->format($calendar, 'lg');
-        }
+        $formattedEvent['dates'] = isset($calendarSummary) ? $calendarSummary : $event->calendarSummary;
     }
 
     /**

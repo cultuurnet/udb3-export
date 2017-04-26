@@ -6,6 +6,9 @@
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
 use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
+use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\TaalicoonDescription;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Event\EventAdvantage;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfo;
@@ -260,16 +263,13 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
     public function it_optionally_enriches_events_with_calendar_period_info()
     {
         $id = 'd1f0e71d-a9a8-4069-81fb-530134502c58';
-        $period = new \CultureFeed_Cdb_Data_Calendar_Period('2014-04-23', '2014-04-30');
-        $periodList = new \CultureFeed_Cdb_Data_Calendar_PeriodList();
-        $periodList->add($period);
+        $expectedSummary = $this->getExpectedCalendarSummary('calendar_summary_periods.html');
 
-        $repository = $this->getCalendarRepositoryWhichReturns($id, $periodList);
+        $repository = $this->getCalendarSummaryRepositoryWhichReturns($id, $expectedSummary);
         $this->eventFormatter = new HTMLEventFormatter(null, $repository);
 
         $event = $this->getFormattedEventFromJSONFile('event_with_terms.json');
-        $expected = $this->getExpectedCalendarSummary('calendar_summary_periods.html');
-        $this->assertFormattedEventDates($event, $expected);
+        $this->assertFormattedEventDates($event, $expectedSummary);
     }
 
     /**
@@ -278,16 +278,13 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
     public function it_optionally_enriches_events_with_calendar_timestamps_info()
     {
         $id = 'd1f0e71d-a9a8-4069-81fb-530134502c58';
-        $timestamp = new \CultureFeed_Cdb_Data_Calendar_Timestamp('2014-04-23');
-        $timestampList = new \CultureFeed_Cdb_Data_Calendar_TimestampList();
-        $timestampList->add($timestamp);
+        $expectedSummary = $this->getExpectedCalendarSummary('calendar_summary_timestamps.html');
 
-        $repository = $this->getCalendarRepositoryWhichReturns($id, $timestampList);
+        $repository = $this->getCalendarSummaryRepositoryWhichReturns($id, $expectedSummary);
         $this->eventFormatter = new HTMLEventFormatter(null, $repository);
 
         $event = $this->getFormattedEventFromJSONFile('event_with_terms.json');
-        $expected = $this->getExpectedCalendarSummary('calendar_summary_timestamps.html');
-        $this->assertFormattedEventDates($event, $expected);
+        $this->assertFormattedEventDates($event, $expectedSummary);
     }
 
     /**
@@ -296,45 +293,28 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
     public function it_optionally_enriches_events_with_calendar_permanent_info()
     {
         $id = 'd1f0e71d-a9a8-4069-81fb-530134502c58';
+        $expectedSummary = $this->getExpectedCalendarSummary('calendar_summary_permanent.html');
 
-        $open = new \CultureFeed_Cdb_Data_Calendar_OpeningTime('09:00:00', '19:00:00');
-        $week = new \CultureFeed_Cdb_Data_Calendar_Weekscheme();
-        foreach (array('monday', 'tuesday', 'wednesday', 'thursday', 'friday') as $day) {
-            $schemeDay = new \CultureFeed_Cdb_Data_Calendar_SchemeDay($day);
-            $schemeDay->setOpen();
-            $schemeDay->addOpeningTime($open);
-            $week->setDay($day, $schemeDay);
-        }
-        foreach (array('saturday', 'sunday') as $day) {
-            $schemeDay = new \CultureFeed_Cdb_Data_Calendar_SchemeDay($day);
-            $schemeDay->setClosed();
-            $week->setDay($day, $schemeDay);
-        }
-
-        $permanent = new \CultureFeed_Cdb_Data_Calendar_Permanent();
-        $permanent->setWeekScheme($week);
-
-        $repository = $this->getCalendarRepositoryWhichReturns($id, $permanent);
+        $repository = $this->getCalendarSummaryRepositoryWhichReturns($id, $expectedSummary);
         $this->eventFormatter = new HTMLEventFormatter(null, $repository);
 
         $event = $this->getFormattedEventFromJSONFile('event_with_terms.json');
-        $expected = $this->getExpectedCalendarSummary('calendar_summary_permanent.html');
-        $this->assertFormattedEventDates($event, $expected);
+        $this->assertFormattedEventDates($event, $expectedSummary);
     }
 
     /**
      * @param string $id
-     * @param \CultureFeed_Cdb_Data_Calendar $calendar
-     * @return CalendarRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @param string $calendarSummary
+     * @return CalendarSummaryRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function getCalendarRepositoryWhichReturns($id, \CultureFeed_Cdb_Data_Calendar $calendar)
+    private function getCalendarSummaryRepositoryWhichReturns($id, $calendarSummary)
     {
-        /* @var CalendarRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject $repository */
-        $repository = $this->createMock(CalendarRepositoryInterface::class);
+        /* @var CalendarSummaryRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject $repository */
+        $repository = $this->createMock(CalendarSummaryRepositoryInterface::class);
         $repository->expects($this->once())
             ->method('get')
-            ->with($id)
-            ->willReturn($calendar);
+            ->with($id, ContentType::HTML(), Format::LARGE())
+            ->willReturn($calendarSummary);
         return $repository;
     }
 

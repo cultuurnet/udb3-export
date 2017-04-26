@@ -1,10 +1,10 @@
 <?php
 
-
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
-use CultureFeed_Cdb_Data_Calendar_Permanent;
-use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
+use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Event\EventAdvantage;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfo;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
@@ -596,17 +596,17 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
             'calendarSummary'
         ];
 
-        $calendar = new \CultureFeed_Cdb_Data_Calendar_PeriodList();
-        $calendar->add(new \CultureFeed_Cdb_Data_Calendar_Period('2013-12-06', '2013-12-25'));
+        $calendarSummary = 'Van 6 december 2013 tot 25 december 2013';
 
-        $calendarRepository = $this->createMock(CalendarRepositoryInterface::class);
-        $calendarRepository
+        $calendarSummaryRepository = $this->createMock(CalendarSummaryRepositoryInterface::class);
+        $calendarSummaryRepository
             ->expects($this->once())
             ->method('get')
-            ->willReturn($calendar);
+            ->with('d1f0e71d-a9a8-4069-81fb-530134502c58', ContentType::PLAIN(), Format::LARGE())
+            ->willReturn($calendarSummary);
 
         $event = $this->getJSONEventFromFile('event_with_dates.json');
-        $formatter = new TabularDataEventFormatter($includedProperties, null, $calendarRepository);
+        $formatter = new TabularDataEventFormatter($includedProperties, null, $calendarSummaryRepository);
         $formattedEvent = $formatter->formatEvent($event);
 
         $expectedFormattedEvent = [

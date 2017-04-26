@@ -2,13 +2,15 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
-use CultuurNet\CalendarSummary\CalendarPlainTextFormatter;
-use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
 use CommerceGuys\Intl\Currency\CurrencyRepository;
 use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
 use CommerceGuys\Intl\Formatter\NumberFormatter;
 use CommerceGuys\Intl\Formatter\NumberFormatterInterface;
 use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
+use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
+use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryGoneException;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\Media\MediaFinder;
 use CultuurNet\UDB3\EventExport\Media\Url;
@@ -40,11 +42,10 @@ class TabularDataEventFormatter
      */
     protected $uitpas;
 
-
     /**
-     * @var CalendarRepositoryInterface
+     * @var CalendarSummaryRepositoryInterface
      */
-    protected $calendarRepository;
+    protected $calendarSummaryRepository;
 
     /**
      * @var NumberFormatterInterface
@@ -64,18 +65,18 @@ class TabularDataEventFormatter
     /**
      * @param string[] $include A list of properties to include
      * @param EventInfoServiceInterface|null $uitpas
-     * @param CalendarRepositoryInterface|null $calendarRepository
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      */
     public function __construct(
         array $include,
         EventInfoServiceInterface $uitpas = null,
-        CalendarRepositoryInterface $calendarRepository = null
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
         $this->htmlFilter = new StripHtmlStringFilter();
         $this->includedProperties = $this->includedOrDefaultProperties($include);
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
-        $this->calendarRepository = $calendarRepository;
+        $this->calendarSummaryRepository = $calendarSummaryRepository;
 
         $numberFormat = (new NumberFormatRepository())->get('nl-BE');
         $this->basePriceFormatter = (new NumberFormatter($numberFormat))->setMinimumFractionDigits(2);
@@ -376,7 +377,7 @@ class TabularDataEventFormatter
             ],
             'calendarSummary.long' => [
                 'name' => 'lange kalendersamenvatting',
-                'include' => $this->longCalendarSummaryFormatter($this->calendarRepository),
+                'include' => $this->largeCalendarSummaryFormatter($this->calendarSummaryRepository),
                 'property' => 'calendarSummary'
             ],
             'labels.visible' => [
@@ -761,28 +762,23 @@ class TabularDataEventFormatter
     }
 
     /**
-     * @param CalendarRepositoryInterface|null $calendarRepository
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      * @return string
      */
-    private function longCalendarSummaryFormatter($calendarRepository)
+    private function largeCalendarSummaryFormatter($calendarSummaryRepository)
     {
-        return function ($event) use ($calendarRepository) {
-            // Set the pre-formatted calendar summary as fallback in case no calendar repository was provided.
-            $summary = $event->calendarSummary;
+        return function ($event) use ($calendarSummaryRepository) {
+            $eventId = $this->parseEventIdFromUrl($event);
 
-            $calendar = null;
-
-            if ($calendarRepository) {
-                $eventId = $this->parseEventIdFromUrl($event);
-                $calendar = $this->calendarRepository->get($eventId);
+            if ($calendarSummaryRepository) {
+                try {
+                    $calendarSummary = $calendarSummaryRepository->get($eventId, ContentType::PLAIN(), Format::LARGE());
+                } catch (SummaryGoneException $exception) {
+                    //TODO: Log the missing summaries.
+                };
             }
 
-            if ($calendar instanceof \CultureFeed_Cdb_Data_Calendar) {
-                $formatter = new CalendarPlainTextFormatter();
-                $summary = $formatter->format($calendar, 'lg');
-            }
-
-            return $summary;
+            return isset($calendarSummary) ? $calendarSummary : $event->calendarSummary;
         };
     }
 }
