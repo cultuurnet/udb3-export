@@ -1,12 +1,9 @@
 <?php
-/**
- * @file
- */
 
 namespace CultuurNet\UDB3\EventExport;
 
 use Broadway\CommandHandling\CommandHandler;
-use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsCSV;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsJsonLD;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsOOXML;
@@ -39,26 +36,26 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     protected $uitpas;
 
     /**
-     * @var CalendarRepositoryInterface
+     * @var CalendarSummaryRepositoryInterface
      */
-    protected $calendarRepository;
+    protected $calendarSummaryRepository;
 
     /**
      * @param EventExportServiceInterface $eventExportService
      * @param string $princeXMLBinaryPath
      * @param EventInfoServiceInterface|null $uitpas
-     * @param CalendarRepositoryInterface $calendarRepository
+     * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
      */
     public function __construct(
         EventExportServiceInterface $eventExportService,
         $princeXMLBinaryPath,
         EventInfoServiceInterface $uitpas = null,
-        CalendarRepositoryInterface $calendarRepository = null
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
         $this->eventExportService = $eventExportService;
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
         $this->uitpas = $uitpas;
-        $this->calendarRepository = $calendarRepository;
+        $this->calendarSummaryRepository = $calendarSummaryRepository;
     }
 
     public function handleExportEventsAsJsonLD(
@@ -89,7 +86,7 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
         ExportEventsAsOOXML $exportCommand
     ) {
         $this->eventExportService->exportEvents(
-            new OOXMLFileFormat($exportCommand->getInclude(), $this->uitpas, $this->calendarRepository),
+            new OOXMLFileFormat($exportCommand->getInclude(), $this->uitpas, $this->calendarSummaryRepository),
             $exportCommand->getQuery(),
             $exportCommand->getAddress(),
             $this->logger,
@@ -108,7 +105,7 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
             $exportEvents->getFooter(),
             $exportEvents->getPublisher(),
             $this->uitpas,
-            $this->calendarRepository
+            $this->calendarSummaryRepository
         );
 
         $this->eventExportService->exportEvents(

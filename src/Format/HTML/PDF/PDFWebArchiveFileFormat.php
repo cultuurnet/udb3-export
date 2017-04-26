@@ -2,7 +2,7 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\HTML\PDF;
 
-use CultuurNet\UDB3\Event\ReadModel\Calendar\CalendarRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\FileFormatInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\WebArchive\WebArchiveFileFormat;
@@ -20,9 +20,9 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
     protected $uitpas;
 
     /**
-     * @var CalendarRepositoryInterface
+     * @var CalendarSummaryRepositoryInterface
      */
-    protected $calendarRepository;
+    protected $calendarSummaryRepository;
 
     /**
      * @param string $princeXMLBinaryPath
@@ -32,7 +32,7 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
      * @param string|null $footer
      * @param string|null $publisher
      * @param EventInfoServiceInterface|null $uitpas
-     * @param CalendarRepositoryInterface|null $calendarRepository
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      */
     public function __construct(
         $princeXMLBinaryPath,
@@ -42,12 +42,12 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
         $footer = null,
         $publisher = null,
         EventInfoServiceInterface $uitpas = null,
-        CalendarRepositoryInterface $calendarRepository = null
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
         parent::__construct($brand, $title, $subTitle, $footer, $publisher);
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
         $this->uitpas = $uitpas;
-        $this->calendarRepository = $calendarRepository;
+        $this->calendarSummaryRepository = $calendarSummaryRepository;
     }
 
     /**
@@ -67,7 +67,7 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
             $this->princeXMLBinaryPath,
             $this->getHTMLFileWriter(),
             $this->uitpas,
-            $this->calendarRepository
+            $this->calendarSummaryRepository
         );
     }
 }

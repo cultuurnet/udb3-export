@@ -65,7 +65,7 @@ class HTMLEventFormatter
 
     /**
      * @param EventInfoServiceInterface|null $uitpas
-     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
+     * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
      */
     public function __construct(
         EventInfoServiceInterface $uitpas = null,
