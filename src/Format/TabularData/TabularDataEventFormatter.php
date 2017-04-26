@@ -297,7 +297,9 @@ class TabularDataEventFormatter
                         $cardSystems = array_reduce(
                             $uitpasInfo['prices'],
                             function ($cardSystems, $tariff) {
-                                $cardSystem = isset($cardSystems[$tariff['cardSystem']]) ? $cardSystems[$tariff['cardSystem']] : '';
+                                $cardSystem = isset($cardSystems[$tariff['cardSystem']])
+                                    ? $cardSystems[$tariff['cardSystem']]
+                                    : '';
                                 $cardSystem = empty($cardSystem)
                                     ? $tariff['cardSystem'] .': € ' . $tariff['price']
                                     : $cardSystem . ' / € ' . $tariff['price'];
