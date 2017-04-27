@@ -762,6 +762,9 @@ class TabularDataEventFormatter
     }
 
     /**
+     * Gives a summary formatted in plain text by trying to fetch the large summary.
+     * If the large formatted summary is missing, the summary that is available on the event will be used as fallback.
+     *
      * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      * @return string
      */

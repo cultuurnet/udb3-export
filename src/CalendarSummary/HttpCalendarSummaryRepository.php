@@ -40,7 +40,7 @@ class HttpCalendarSummaryRepository implements CalendarSummaryRepositoryInterfac
     public function get($offerId, ContentType $type, Format $format)
     {
         $summaryLocation = $this->calendarSummariesLocation
-            ->withPath('/offer/' . $offerId . '/calendar-summary')
+            ->withPath('/event/' . $offerId . '/calendar-summary')
             ->withQuery('format=' . $format->getValue());
 
         $summaryRequest = new Request(
@@ -57,6 +57,7 @@ class HttpCalendarSummaryRepository implements CalendarSummaryRepositoryInterfac
                 ->getBody()
                 ->getContents();
         } catch (\Exception $exception) {
+            var_dump($exception->getMessage());
             throw new SummaryUnavailableException('No summary available for offer with id: ' . $offerId);
         }
     }
