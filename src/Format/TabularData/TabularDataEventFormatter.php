@@ -377,7 +377,7 @@ class TabularDataEventFormatter
             ],
             'calendarSummary.long' => [
                 'name' => 'lange kalendersamenvatting',
-                'include' => $this->largeCalendarSummaryFormatter($this->calendarSummaryRepository),
+                'include' => $this->calendarSummaryFormatter(Format::LARGE(), $this->calendarSummaryRepository),
                 'property' => 'calendarSummary'
             ],
             'labels.visible' => [
@@ -762,20 +762,22 @@ class TabularDataEventFormatter
     }
 
     /**
-     * Gives a summary formatted in plain text by trying to fetch the large summary.
-     * If the large formatted summary is missing, the summary that is available on the event will be used as fallback.
+     * Gives a formatter that tries to fetch a summary in plain text.
+     * If the formatted summary is missing, the summary that is available on the event will be used as fallback.
      *
+     * @param Format $format
      * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
+     *
      * @return string
      */
-    private function largeCalendarSummaryFormatter($calendarSummaryRepository)
+    private function calendarSummaryFormatter(Format $format, $calendarSummaryRepository)
     {
-        return function ($event) use ($calendarSummaryRepository) {
+        return function ($event) use ($calendarSummaryRepository, $format) {
             $eventId = $this->parseEventIdFromUrl($event);
 
             if ($calendarSummaryRepository) {
                 try {
-                    $calendarSummary = $calendarSummaryRepository->get($eventId, ContentType::PLAIN(), Format::LARGE());
+                    $calendarSummary = $calendarSummaryRepository->get($eventId, ContentType::PLAIN(), $format);
                 } catch (SummaryUnavailableException $exception) {
                     //TODO: Log the missing summaries.
                 };
