@@ -11,7 +11,6 @@ interface CalendarSummaryRepositoryInterface
      *
      * @return string|null
      *
-     * @throws UnsupportedContentTypeException
      * @throws SummaryUnavailableException
      */
     public function get($offerId, ContentType $type, Format $format);
