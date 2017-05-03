@@ -2,7 +2,6 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
-use Closure;
 use CultuurNet\UDB3\Event\EventType;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\EventSpecificationInterface;
 use CultuurNet\UDB3\Event\ReadModel\JSONLD\Specifications\Has1Taalicoon;
