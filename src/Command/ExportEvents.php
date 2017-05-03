@@ -39,8 +39,12 @@ abstract class ExportEvents
      * @param string[] $selection
      * @param string[] $include
      */
-    public function __construct(EventExportQuery $query, EmailAddress $address = null, $selection = null, $include = null)
-    {
+    public function __construct(
+        EventExportQuery $query,
+        EmailAddress $address = null,
+        $selection = null,
+        $include = null
+    ) {
         if ($query->isEmpty()) {
             throw new \RuntimeException('Query can not be empty');
         }

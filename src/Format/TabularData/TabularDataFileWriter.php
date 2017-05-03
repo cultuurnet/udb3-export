@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData;
 
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\FileWriterInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 
@@ -22,13 +23,20 @@ class TabularDataFileWriter implements FileWriterInterface
      */
     protected $tabularDataFileWriterFactory;
 
+    /**
+     * @param TabularDataFileWriterFactoryInterface $tabularDataFileWriterFactory
+     * @param $include
+     * @param EventInfoServiceInterface $uitpas
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
+     */
     public function __construct(
         TabularDataFileWriterFactoryInterface $tabularDataFileWriterFactory,
         $include,
-        EventInfoServiceInterface $uitpas
+        EventInfoServiceInterface $uitpas,
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
         $this->tabularDataFileWriterFactory = $tabularDataFileWriterFactory;
-        $this->eventFormatter = new TabularDataEventFormatter($include, $uitpas);
+        $this->eventFormatter = new TabularDataEventFormatter($include, $uitpas, $calendarSummaryRepository);
     }
 
     /**

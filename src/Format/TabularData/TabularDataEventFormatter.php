@@ -7,6 +7,10 @@ use CommerceGuys\Intl\Currency\CurrencyRepositoryInterface;
 use CommerceGuys\Intl\Formatter\NumberFormatter;
 use CommerceGuys\Intl\Formatter\NumberFormatterInterface;
 use CommerceGuys\Intl\NumberFormat\NumberFormatRepository;
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
+use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
+use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
+use CultuurNet\UDB3\EventExport\CalendarSummary\SummaryUnavailableException;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\Media\MediaFinder;
 use CultuurNet\UDB3\EventExport\Media\Url;
@@ -39,6 +43,11 @@ class TabularDataEventFormatter
     protected $uitpas;
 
     /**
+     * @var CalendarSummaryRepositoryInterface
+     */
+    protected $calendarSummaryRepository;
+
+    /**
      * @var NumberFormatterInterface
      */
     protected $currencyFormatter;
@@ -56,15 +65,18 @@ class TabularDataEventFormatter
     /**
      * @param string[] $include A list of properties to include
      * @param EventInfoServiceInterface|null $uitpas
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      */
     public function __construct(
         array $include,
-        EventInfoServiceInterface $uitpas = null
+        EventInfoServiceInterface $uitpas = null,
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
         $this->htmlFilter = new StripHtmlStringFilter();
         $this->includedProperties = $this->includedOrDefaultProperties($include);
         $this->uitpas = $uitpas;
         $this->uitpasInfoFormatter = new UitpasInfoFormatter(new PriceFormatter(2, ',', '.', 'Gratis'));
+        $this->calendarSummaryRepository = $calendarSummaryRepository;
 
         $numberFormat = (new NumberFormatRepository())->get('nl-BE');
         $this->basePriceFormatter = (new NumberFormatter($numberFormat))->setMinimumFractionDigits(2);
@@ -182,6 +194,10 @@ class TabularDataEventFormatter
                 'labels.visible',
                 'labels.hidden',
             ],
+            'calendarSummary' => [
+                'calendarSummary.short',
+                'calendarSummary.long',
+            ],
         ];
 
         foreach ($properties as $property) {
@@ -219,11 +235,7 @@ class TabularDataEventFormatter
             'id' => [
                 'name' => 'id',
                 'include' => function ($event) {
-                    $eventUri = $event->{'@id'};
-                    $uriParts = explode('/', $eventUri);
-                    $eventId = array_pop($uriParts);
-
-                    return $eventId;
+                    return $this->parseEventIdFromUrl($event);
                 },
                 'property' => 'id'
             ],
@@ -286,7 +298,9 @@ class TabularDataEventFormatter
                         $cardSystems = array_reduce(
                             $uitpasInfo['prices'],
                             function ($cardSystems, $tariff) {
-                                $cardSystem = isset($cardSystems[$tariff['cardSystem']]) ? $cardSystems[$tariff['cardSystem']] : '';
+                                $cardSystem = isset($cardSystems[$tariff['cardSystem']])
+                                    ? $cardSystems[$tariff['cardSystem']]
+                                    : '';
                                 $cardSystem = empty($cardSystem)
                                     ? $tariff['cardSystem'] .': € ' . $tariff['price']
                                     : $cardSystem . ' / € ' . $tariff['price'];
@@ -354,11 +368,16 @@ class TabularDataEventFormatter
                 },
                 'property' => 'organizer'
             ],
-            'calendarSummary' => [
-                'name' => 'tijdsinformatie',
+            'calendarSummary.short' => [
+                'name' => 'korte kalendersamenvatting',
                 'include' => function ($event) {
                     return $event->calendarSummary;
                 },
+                'property' => 'calendarSummary'
+            ],
+            'calendarSummary.long' => [
+                'name' => 'lange kalendersamenvatting',
+                'include' => $this->calendarSummaryFormatter(Format::LARGE(), $this->calendarSummaryRepository),
                 'property' => 'calendarSummary'
             ],
             'labels.visible' => [
@@ -726,6 +745,45 @@ class TabularDataEventFormatter
             }
             $mainImage = (new MediaFinder(new Url($event->image)))->find($event->mediaObject);
             return $mainImage ? $mainImage->{$propertyName} : '';
+        };
+    }
+
+    /**
+     * @param $event
+     * @return string
+     */
+    private function parseEventIdFromUrl($event)
+    {
+        $eventUri = $event->{'@id'};
+        $uriParts = explode('/', $eventUri);
+        $eventId = array_pop($uriParts);
+
+        return $eventId;
+    }
+
+    /**
+     * Gives a formatter that tries to fetch a summary in plain text.
+     * If the formatted summary is missing, the summary that is available on the event will be used as fallback.
+     *
+     * @param Format $format
+     * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
+     *
+     * @return string
+     */
+    private function calendarSummaryFormatter(Format $format, $calendarSummaryRepository)
+    {
+        return function ($event) use ($calendarSummaryRepository, $format) {
+            $eventId = $this->parseEventIdFromUrl($event);
+
+            if ($calendarSummaryRepository) {
+                try {
+                    $calendarSummary = $calendarSummaryRepository->get($eventId, ContentType::PLAIN(), $format);
+                } catch (SummaryUnavailableException $exception) {
+                    //TODO: Log the missing summaries.
+                };
+            }
+
+            return isset($calendarSummary) ? $calendarSummary : $event->calendarSummary;
         };
     }
 }

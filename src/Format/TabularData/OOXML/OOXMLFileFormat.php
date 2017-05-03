@@ -1,10 +1,8 @@
 <?php
-/**
- * @file
- */
 
 namespace CultuurNet\UDB3\EventExport\Format\TabularData\OOXML;
 
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\FileFormatInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\Format\TabularData\TabularDataFileWriter;
@@ -22,13 +20,23 @@ class OOXMLFileFormat implements FileFormatInterface
     protected $uitpas;
 
     /**
+     * @var CalendarSummaryRepositoryInterface|null
+     */
+    protected $calendarSummaryRepository;
+
+    /**
      * @param string[]|null $include
      * @param EventInfoServiceInterface|null $uitpas
+     * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
      */
-    public function __construct($include = null, EventInfoServiceInterface $uitpas = null)
-    {
+    public function __construct(
+        $include = null,
+        EventInfoServiceInterface $uitpas = null,
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
+    ) {
         $this->include = $include;
         $this->uitpas = $uitpas;
+        $this->calendarSummaryRepository = $calendarSummaryRepository;
     }
 
     /**
@@ -47,7 +55,8 @@ class OOXMLFileFormat implements FileFormatInterface
         return new TabularDataFileWriter(
             new OOXMLFileWriterFactory(),
             $this->include,
-            $this->uitpas
+            $this->uitpas,
+            $this->calendarSummaryRepository
         );
     }
 }
