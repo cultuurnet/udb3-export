@@ -596,14 +596,21 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
             'calendarSummary'
         ];
 
-        $calendarSummary = 'Van 6 december 2013 tot 25 december 2013';
+        $smallCalendarSummary = '06/12/2013 tot 25/12/2013';
+        $largeCalendarSummary = 'Van 6 december 2013 tot 25 december 2013';
 
         $calendarSummaryRepository = $this->createMock(CalendarSummaryRepositoryInterface::class);
         $calendarSummaryRepository
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with('d1f0e71d-a9a8-4069-81fb-530134502c58', ContentType::PLAIN(), Format::LARGE())
-            ->willReturn($calendarSummary);
+            ->withConsecutive(
+                ['d1f0e71d-a9a8-4069-81fb-530134502c58', ContentType::PLAIN(), Format::MEDIUM()],
+                ['d1f0e71d-a9a8-4069-81fb-530134502c58', ContentType::PLAIN(), Format::LARGE()]
+            )
+            ->will($this->onConsecutiveCalls(
+                $smallCalendarSummary,
+                $largeCalendarSummary
+            ));
 
         $event = $this->getJSONEventFromFile('event_with_dates.json');
         $formatter = new TabularDataEventFormatter($includedProperties, null, $calendarSummaryRepository);
@@ -611,7 +618,7 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
         $expectedFormattedEvent = [
             'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
-            'calendarSummary.short' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
+            'calendarSummary.short' => '06/12/2013 tot 25/12/2013',
             'calendarSummary.long' => 'Van 6 december 2013 tot 25 december 2013',
         ];
 
