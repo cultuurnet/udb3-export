@@ -81,6 +81,46 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider organizerDataProvider
+     * @param string $sampleFile
+     */
+    public function it_handles_organizer($sampleFile)
+    {
+        $includedProperties = [
+            'organizer',
+        ];
+        $eventWithTranslatedOrganizer = $this->getJSONEventFromFile($sampleFile);
+        $formatter = new TabularDataEventFormatter($includedProperties);
+
+        $formattedEvent = $formatter->formatEvent($eventWithTranslatedOrganizer);
+        $expectedFormatting = [
+            'id' => 'd1f0e71d-a9a8-4069-81fb-530134502c58',
+            'organizer' => 'Davidsfonds Academie',
+        ];
+
+        $this->assertEquals($expectedFormatting, $formattedEvent);
+    }
+
+    /**
+     * @return array
+     */
+    public function organizerDataProvider()
+    {
+        return [
+            [
+                'event_with_translated_organizer.json'
+            ],
+            [
+                'event_with_translated_organizer_and_main_language.json'
+            ],
+            [
+                'event_with_untranslated_organizer.json'
+            ],
+        ];
+    }
+
+    /**
+     * @test
      */
     public function it_formats_address_as_separate_columns()
     {
