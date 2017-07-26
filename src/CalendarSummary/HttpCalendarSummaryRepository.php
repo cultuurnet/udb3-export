@@ -57,7 +57,6 @@ class HttpCalendarSummaryRepository implements CalendarSummaryRepositoryInterfac
                 ->getBody()
                 ->getContents();
         } catch (\Exception $exception) {
-            var_dump($exception->getMessage());
             throw new SummaryUnavailableException('No summary available for offer with id: ' . $offerId);
         }
     }
