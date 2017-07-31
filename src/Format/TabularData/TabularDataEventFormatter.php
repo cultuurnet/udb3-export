@@ -534,36 +534,30 @@ class TabularDataEventFormatter
             'address.streetAddress' => [
                 'name' => 'straat',
                 'include' => function ($event) {
-                    if (isset($event->location->address->streetAddress)) {
-                        return $event->location->address->streetAddress;
-                    }
+                    return $this->getAddressField($event, 'streetAddress');
                 },
                 'property' => 'address.streetAddress'
             ],
             'address.postalCode' => [
                 'name' => 'postcode',
                 'include' => function ($event) {
-                    if (isset($event->location->address->postalCode)) {
-                        return $event->location->address->postalCode;
-                    }
+                    return $this->getAddressField($event, 'postalCode');
                 },
                 'property' => 'address.postalCode'
             ],
             'address.addressLocality' => [
                 'name' => 'gemeente',
                 'include' => function ($event) {
-                    if (isset($event->location->address->addressLocality)) {
-                        return $event->location->address->addressLocality;
-                    }
+                    return $this->getAddressField($event, 'addressLocality');
+
                 },
                 'property' => 'address.addressLocality'
             ],
             'address.addressCountry' => [
                 'name' => 'land',
                 'include' => function ($event) {
-                    if (isset($event->location->address->addressCountry)) {
-                        return $event->location->address->addressCountry;
-                    }
+                    return $this->getAddressField($event, 'addressCountry');
+
                 },
                 'property' => 'address.addressCountry'
             ],
@@ -791,5 +785,26 @@ class TabularDataEventFormatter
 
             return isset($calendarSummary) ? $calendarSummary : $event->calendarSummary;
         };
+    }
+
+    /**
+     * @replay_i18n
+     * @see https://jira.uitdatabank.be/browse/III-2201
+     *
+     * @param object $event
+     * @param string $addressField
+     *
+     * @return string
+     */
+    private function getAddressField($event, $addressField)
+    {
+        if (isset($event->location->address->{$addressField})) {
+            return $event->location->address->{$addressField};
+        } else {
+            $mainLanguage = isset($event->mainLanguage) ? $event->mainLanguage : 'nl';
+            if (isset($event->location->address->{$mainLanguage}->{$addressField})) {
+                return $event->location->address->{$mainLanguage}->{$addressField};
+            }
+        }
     }
 }

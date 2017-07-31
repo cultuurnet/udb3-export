@@ -121,14 +121,16 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider addressDataProvider
+     * @param string $sampleFile
      */
-    public function it_formats_address_as_separate_columns()
+    public function it_handles_address($sampleFile)
     {
         $includedProperties = [
             'id',
             'address'
         ];
-        $eventWithTerms = $this->getJSONEventFromFile('event_with_terms.json');
+        $eventWithTerms = $this->getJSONEventFromFile($sampleFile);
         $formatter = new TabularDataEventFormatter($includedProperties);
 
         $formattedEvent = $formatter->formatEvent($eventWithTerms);
@@ -141,6 +143,24 @@ class TabularDataEventFormatterTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals($expectedFormatting, $formattedEvent);
+    }
+
+    /**
+     * @return array
+     */
+    public function addressDataProvider()
+    {
+        return [
+            [
+                'event_with_terms.json'
+            ],
+            [
+                'event_with_translated_address.json'
+            ],
+            [
+                'event_with_translated_address_and_main_language.json'
+            ],
+        ];
     }
 
     /**
