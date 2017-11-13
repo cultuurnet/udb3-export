@@ -141,9 +141,9 @@ class HTMLEventFormatter
 
             if (property_exists($event->location, 'address')) {
                 $address += [
-                    'street' => $event->location->address->streetAddress,
-                    'postcode' => $event->location->address->postalCode,
-                    'municipality' => $event->location->address->addressLocality,
+                    'street' => reset($event->location->address)->streetAddress,
+                    'postcode' => reset($event->location->address)->postalCode,
+                    'municipality' => reset($event->location->address)->addressLocality,
                 ];
             }
         }
