@@ -172,10 +172,10 @@ class CultureFeedEventInfoService implements EventInfoServiceInterface, LoggerAw
             }
 
             $promotion = sprintf(
-                '%s %s: %s',
+                '%s (%s %s)',
+                $promotionsQueryResult->title,
                 $promotionsQueryResult->points,
-                $pointChoice,
-                $promotionsQueryResult->title
+                $pointChoice
             );
             $promotions[] = $promotion;
         }
