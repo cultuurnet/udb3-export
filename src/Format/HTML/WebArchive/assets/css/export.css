@@ -136,7 +136,6 @@ html {
 	font-size: 9px;
 	margin-top: 6px;
 	position: relative;
-	padding-right: 50px;
 }
 .page:not(.page--uitpas):not(.page--paspartoe) .activity.uitpas .activity__uitpas:before
 {

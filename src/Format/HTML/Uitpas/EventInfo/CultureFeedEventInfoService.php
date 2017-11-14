@@ -1,7 +1,4 @@
 <?php
-/**
- * @file
- */
 
 namespace CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo;
 
@@ -15,7 +12,6 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\DistributionKey\KansentariefF
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\DistributionKey\KansentariefForOtherCardSystemsSpecification;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Event\EventAdvantage;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Event\PointCollectingSpecification;
-use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Promotion\EventOrganizerPromotionQueryFactory;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\Promotion\PromotionQueryFactoryInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -51,6 +47,7 @@ class CultureFeedEventInfoService implements EventInfoServiceInterface, LoggerAw
 
     /**
      * @param CultureFeed_Uitpas $uitpas
+     * @param PromotionQueryFactoryInterface $promotionQueryFactory
      */
     public function __construct(
         CultureFeed_Uitpas $uitpas,
@@ -166,16 +163,16 @@ class CultureFeedEventInfoService implements EventInfoServiceInterface, LoggerAw
 
         foreach ($promotionQueryResults as $promotionsQueryResult) {
             if ($promotionsQueryResult->points === 1) {
-                $pointChoice = 'punt';
+                $pointChoice = 'pt';
             } else {
-                $pointChoice = 'punten';
+                $pointChoice = 'ptn';
             }
 
             $promotion = sprintf(
-                '%s %s: %s',
+                '%s (%s %s)',
+                $promotionsQueryResult->title,
                 $promotionsQueryResult->points,
-                $pointChoice,
-                $promotionsQueryResult->title
+                $pointChoice
             );
             $promotions[] = $promotion;
         }
