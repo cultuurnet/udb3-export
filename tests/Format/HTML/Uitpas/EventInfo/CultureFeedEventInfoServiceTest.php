@@ -181,8 +181,8 @@ class CultureFeedEventInfoServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             [
-                'free drink (10 punten)',
-                'one point to rule them all (1 punt)'
+                'free drink (10 ptn)',
+                'one point to rule them all (1 pt)'
             ],
             $promotions
         );
