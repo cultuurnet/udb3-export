@@ -301,13 +301,13 @@ class HTMLEventFormatter
     */
     private function getAddressField($event, $addressField)
     {
-      if (isset($event->location->address->{$addressField})) {
-        return $event->location->address->{$addressField};
-      } else {
-        $mainLanguage = isset($event->mainLanguage) ? $event->mainLanguage : 'nl';
-        if (isset($event->location->address->{$mainLanguage}->{$addressField})) {
-           return $event->location->address->{$mainLanguage}->{$addressField};
+        if (isset($event->location->address->{$addressField})) {
+            return $event->location->address->{$addressField};
+        } else {
+            $mainLanguage = isset($event->mainLanguage) ? $event->mainLanguage : 'nl';
+            if (isset($event->location->address->{$mainLanguage}->{$addressField})) {
+                return $event->location->address->{$mainLanguage}->{$addressField};
+            }
         }
-      }
     }
 }
