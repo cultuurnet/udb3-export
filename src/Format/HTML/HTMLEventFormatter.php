@@ -141,9 +141,9 @@ class HTMLEventFormatter
 
             if (property_exists($event->location, 'address')) {
                 $address += [
-                    'street' => $event->location->address->streetAddress,
-                    'postcode' => $event->location->address->postalCode,
-                    'municipality' => $event->location->address->addressLocality,
+                    'street' => $this->getAddressField($event, 'streetAddress'),
+                    'postcode' => $this->getAddressField($event, 'postalCode'),
+                    'municipality' => $this->getAddressField($event, 'addressLocality')
                 ];
             }
         }
@@ -286,6 +286,28 @@ class HTMLEventFormatter
 
         if ($mainImage) {
             $formattedEvent['mediaObject'] = $mainImage;
+        }
+    }
+
+
+    /**
+    * @replay_i18n
+    * @see https://jira.uitdatabank.be/browse/III-2201
+    *
+    * @param object $event
+    * @param string $addressField
+    *
+    * @return string
+    */
+    private function getAddressField($event, $addressField)
+    {
+        if (isset($event->location->address->{$addressField})) {
+            return $event->location->address->{$addressField};
+        } else {
+            $mainLanguage = isset($event->mainLanguage) ? $event->mainLanguage : 'nl';
+            if (isset($event->location->address->{$mainLanguage}->{$addressField})) {
+                return $event->location->address->{$mainLanguage}->{$addressField};
+            }
         }
     }
 }
