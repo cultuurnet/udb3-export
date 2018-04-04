@@ -13,6 +13,7 @@ abstract class WebArchiveFileFormat
 
     /**
      * @param string $brand
+     * @param string $logo
      * @param string $title
      * @param string|null $subtitle
      * @param string|null $footer
@@ -20,6 +21,7 @@ abstract class WebArchiveFileFormat
      */
     public function __construct(
         $brand,
+        $logo,
         $title,
         $subtitle = null,
         $footer = null,
@@ -27,6 +29,7 @@ abstract class WebArchiveFileFormat
     ) {
         $variables = [
             'brand' => $brand,
+            'logo' => $logo,
             'title' => $title,
             'subtitle' => $subtitle,
             'footer' => $footer,

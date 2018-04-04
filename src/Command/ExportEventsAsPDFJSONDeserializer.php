@@ -58,11 +58,18 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
             throw new MissingValueException('title is missing');
         }
 
+        if (!isset($customizations->logo)) {
+            throw new MissingValueException('logo is missing');
+        }
+
+        $logo = $customizations->logo;
+
         $title = new Title($customizations->title);
 
         $command = new ExportEventsAsPDF(
             $query,
             $brand,
+            $logo,
             $title
         );
 

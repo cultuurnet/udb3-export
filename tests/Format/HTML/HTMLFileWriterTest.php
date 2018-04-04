@@ -27,6 +27,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'Lorem Ipsum.',
             )
         );
@@ -104,6 +105,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'vlieg',
+                'logo' => 'img/vlieg.svg',
                 'title' => 'Lorem Ipsum.',
                 'subtitle' => 'Dolor sit amet.',
                 'footer' => 'Cursus mattis lorem ipsum.',
@@ -171,6 +173,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'Lorem Ipsum.',
             )
         );
@@ -204,6 +207,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -239,6 +243,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -274,6 +279,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -313,6 +319,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -352,6 +359,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -413,6 +421,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -432,6 +441,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'paspartoe',
+                'logo' => 'img/paspartoe.svg',
                 'title' => 'UiT',
             )
         );

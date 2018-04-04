@@ -55,14 +55,17 @@ class ExportEventsAsPDF
     /**
      * @param EventExportQuery $query
      * @param Brand $brand
+     * @param string $logo
      * @param Title $title
      */
     public function __construct(
         EventExportQuery $query,
         Brand $brand,
+        string $logo,
         Title $title
     ) {
         $this->brand = $brand;
+        $this->logo = $logo;
         $this->query = $query;
         $this->title = $title;
     }

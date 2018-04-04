@@ -1,6 +1,6 @@
 {
   "customizations": {
-    "logo": "http://foo.bar/logo.svg",
+    "brand": "vlieg",
     "title": "a title",
     "subtitle": "a subtitle",
     "footer": "a footer",

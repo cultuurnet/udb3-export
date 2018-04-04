@@ -28,6 +28,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
         $this->export = new ExportEventsAsPDF(
             new EventExportQuery('*.*'),
             new Brand('vlieg'),
+            'http://foo.bar/logo.svg',
             new Title('title')
         );
         $this->clonedExport = clone $this->export;

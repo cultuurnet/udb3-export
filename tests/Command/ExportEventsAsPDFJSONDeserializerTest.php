@@ -39,6 +39,7 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
             new ExportEventsAsPDF(
                 new EventExportQuery('city:doetown'),
                 new Brand('vlieg'),
+                'http://foo.bar/logo.svg',
                 new Title('a title')
             ),
             $command
