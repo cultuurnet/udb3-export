@@ -100,6 +100,7 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
         $fileFormat = new PDFWebArchiveFileFormat(
             $this->princeXMLBinaryPath,
             $exportEvents->getBrand(),
+            $exportEvents->getLogo(),
             $exportEvents->getTitle(),
             $exportEvents->getSubtitle(),
             $exportEvents->getFooter(),

@@ -179,6 +179,14 @@ class ExportEventsAsPDF
     }
 
     /**
+     * @return string
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
      * @return Title
      */
     public function getTitle()
