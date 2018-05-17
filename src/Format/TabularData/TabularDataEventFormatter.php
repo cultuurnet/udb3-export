@@ -730,7 +730,19 @@ class TabularDataEventFormatter
 
         $tariffPrice = $this->currencyFormatter->formatCurrency((string) $price, $currency);
 
-        return $tariff->name . ': ' . $tariffPrice;
+        /**
+         * @replay_i18n
+         * @see https://jira.uitdatabank.be/browse/III-2201
+         */
+
+        if (!is_string($tariff->name)) {
+            $mainLanguage = isset($event->mainLanguage) ? $event->mainLanguage : 'nl';
+            $tariffName = $tariff->name->{$mainLanguage};
+        } else {
+            $tariffName = $tariff->name;
+        }
+
+        return $tariffName . ': ' . $tariffPrice;
     }
 
     /**
