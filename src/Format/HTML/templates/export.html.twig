@@ -27,14 +27,14 @@
         <div class="page page--{{ brand }}">
             <div class="header">
                 <h1 class="header__title">{{ title }}</h1>
-                {% if subtitle %}
-                    <p class="header__baseline">{{ subtitle }}</p>
-                {%- endif %}
+                {% if subtitle -%}
+                <p class="header__baseline">{{ subtitle }}</p>
+                {% endif -%}
                 <div class="header__brand">
                   <img class="header__brand__image" src="{{logo}}" />
-                    {%- if partner -%}
-                      <p class="header__brand__baseline">in samenwerking met <span class="header__brand__baseline__uit"></span></p>
-                    {%- endif %}
+                  {%- if partner %}
+                  <p class="header__brand__baseline">in samenwerking met <span class="header__brand__baseline__uit"></span></p>
+                  {%- endif %}
 
                 </div>
             </div>

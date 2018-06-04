@@ -445,6 +445,8 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
+
+
         $fileWriter->write($this->filePath, $events);
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_uitpas_info_paspartoe_branded.html');
