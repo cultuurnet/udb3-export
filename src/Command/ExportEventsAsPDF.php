@@ -3,7 +3,6 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Brand;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;

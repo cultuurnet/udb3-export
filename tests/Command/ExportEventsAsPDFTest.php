@@ -3,7 +3,6 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Brand;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -27,7 +26,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
     {
         $this->export = new ExportEventsAsPDF(
             new EventExportQuery('*.*'),
-            new Brand('vlieg'),
+            'vlieg',
             'http://foo.bar/logo.svg',
             new Title('title')
         );
@@ -49,7 +48,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
      */
     public function it_includes_a_brand()
     {
-        $query = new Brand('vlieg');
+        $query = 'vlieg';
         $this->assertEquals($query, $this->export->getBrand());
         $this->assertEquals($this->clonedExport, $this->export);
     }

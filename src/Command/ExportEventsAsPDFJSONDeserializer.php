@@ -8,7 +8,6 @@ namespace CultuurNet\UDB3\EventExport\Command;
 use CultuurNet\Deserializer\JSONDeserializer;
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Brand;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -52,7 +51,7 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
             throw new MissingValueException('brand is missing');
         }
 
-        $brand = new Brand($customizations->brand);
+        $brand = $customizations->brand;
 
         if (!isset($customizations->title)) {
             throw new MissingValueException('title is missing');
