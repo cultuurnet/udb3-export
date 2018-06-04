@@ -270,7 +270,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                     'municipality' => 'Tienen',
                 ],
                 'price' => 'Niet ingevoerd',
-                'dates' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30',
+                'dates' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
                 'taalicoonCount' => 4,
                 'taalicoonDescription' => 'Je spreekt en begrijpt vlot Nederlands.',
             ]

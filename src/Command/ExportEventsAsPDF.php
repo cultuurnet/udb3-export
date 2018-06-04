@@ -54,13 +54,13 @@ class ExportEventsAsPDF
 
     /**
      * @param EventExportQuery $query
-     * @param Brand $brand
+     * @param string $brand
      * @param string $logo
      * @param Title $title
      */
     public function __construct(
         EventExportQuery $query,
-        Brand $brand,
+        string $brand,
         string $logo,
         Title $title
     ) {
@@ -171,7 +171,7 @@ class ExportEventsAsPDF
     }
 
     /**
-     * @return Brand
+     * @return string
      */
     public function getBrand()
     {
