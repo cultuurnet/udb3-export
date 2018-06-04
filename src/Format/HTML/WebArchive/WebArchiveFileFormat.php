@@ -18,6 +18,7 @@ abstract class WebArchiveFileFormat
      * @param string|null $subtitle
      * @param string|null $footer
      * @param string|null $publisher
+     * @param string|null $partner
      */
     public function __construct(
         $brand,
@@ -25,7 +26,8 @@ abstract class WebArchiveFileFormat
         $title,
         $subtitle = null,
         $footer = null,
-        $publisher = null
+        $publisher = null,
+        $partner = null
     ) {
         $variables = [
             'brand' => $brand,
@@ -34,6 +36,7 @@ abstract class WebArchiveFileFormat
             'subtitle' => $subtitle,
             'footer' => $footer,
             'publisher' => $publisher,
+            'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe'))
         ];
         $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
     }

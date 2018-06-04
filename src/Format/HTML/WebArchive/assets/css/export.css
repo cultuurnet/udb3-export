@@ -31,12 +31,12 @@ html {
 }
 .activity__image
 {
-	width: auto;
-    height: auto;
-    max-height: 4cm;
-    max-width: 4cm;
-	margin: 0 auto;
-	display: block;
+  width: auto;
+  height: auto;
+  max-height: 4cm;
+  max-width: 4cm;
+  margin: 0 auto;
+  display: block;
 }
 .activity__image__copyright
 {
@@ -182,14 +182,41 @@ html {
     font-weight: 300;
     margin: 0.25cm 0;
 }
-.header__image {
+.header__brand {
     position: absolute;
     right: 0;
     top: 0;
-    width: 5cm;
     height: 2.5cm;
 }
+.header__brand__image {
+    float: right;
+    text-align: right;
+    display: block;
+    margin-bottom: 5px;
+}
+.header__brand__baseline {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 100;
+    color: #777;
+    line-height: 18px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    float: right;
+    clear: both;
+}
 
+.header__brand__baseline__uit {
+    background-image: url('../img/partner-uit.svg');
+    width: 30px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    display: inline-block;
+    vertical-align: bottom;
+}
 /* FOOTER */
 .footer
 {
