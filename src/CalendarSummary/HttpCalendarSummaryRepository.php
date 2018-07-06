@@ -29,19 +29,15 @@ class HttpCalendarSummaryRepository implements CalendarSummaryRepositoryInterfac
     }
 
     /**
-     * @param string $offerId
-     * @param ContentType $type
-     * @param Format $format
-     *
-     * @throws SummaryUnavailableException
-     *
-     * @return string
+     * @inheritdoc
      */
-    public function get($offerId, ContentType $type, Format $format)
+    public function get($offerId, ContentType $type, Format $format, CalendarLanguage $calendarLanguage = null)
     {
+        $calendarValue = isset($calendarLanguage) ? $calendarLanguage->getValue() : CalendarLanguage::DUTCH()->getValue();
         $summaryLocation = $this->calendarSummariesLocation
             ->withPath('/event/' . $offerId . '/calendar-summary')
-            ->withQuery('format=' . $format->getValue());
+            ->withQuery('format=' . $format->getValue())
+            ->withQuery('language=' . $calendarValue);
 
         $summaryRequest = new Request(
             'GET',
