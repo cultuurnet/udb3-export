@@ -36,8 +36,7 @@ class HttpCalendarSummaryRepository implements CalendarSummaryRepositoryInterfac
         $calendarValue = isset($calendarLanguage) ? $calendarLanguage->getValue() : CalendarLanguage::DUTCH()->getValue();
         $summaryLocation = $this->calendarSummariesLocation
             ->withPath('/event/' . $offerId . '/calendar-summary')
-            ->withQuery('format=' . $format->getValue())
-            ->withQuery('language=' . $calendarValue);
+            ->withQuery('format=' . $format->getValue() . '&language=' . $calendarValue);
 
         $summaryRequest = new Request(
             'GET',
