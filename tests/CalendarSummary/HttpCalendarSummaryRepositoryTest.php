@@ -2,6 +2,7 @@
 
 namespace CalendarSummary;
 
+use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarLanguage;
 use CultuurNet\UDB3\EventExport\CalendarSummary\ContentType;
 use CultuurNet\UDB3\EventExport\CalendarSummary\Format;
 use CultuurNet\UDB3\EventExport\CalendarSummary\HttpCalendarSummaryRepository;
@@ -22,7 +23,7 @@ class HttpCalendarSummaryRepositoryTest extends \PHPUnit_Framework_TestCase
         $offerId = 'D352C4E6-90C6-4120-8DBB-A09B486170CD';
         $expectedRequest = new Request(
             'GET',
-            'http://uitdatabank.io/event/D352C4E6-90C6-4120-8DBB-A09B486170CD/calendar-summary?format=lg',
+            'http://uitdatabank.io/event/D352C4E6-90C6-4120-8DBB-A09B486170CD/calendar-summary?format=lg&language=nl',
             [
                 'Accept' => 'text/plain'
             ]
@@ -40,7 +41,7 @@ class HttpCalendarSummaryRepositoryTest extends \PHPUnit_Framework_TestCase
             ->with($expectedRequest)
             ->willReturn(new Response());
 
-        $repository->get($offerId, ContentType::PLAIN(), Format::LARGE());
+        $repository->get($offerId, ContentType::PLAIN(), Format::LARGE(), CalendarLanguage::DUTCH());
     }
 
     /**
@@ -67,5 +68,63 @@ class HttpCalendarSummaryRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->expectException(SummaryUnavailableException::class);
 
         $repository->get($offerId, ContentType::PLAIN(), Format::LARGE());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_fetch_calendar_summaries_in_dutch_if_no_language_is_giving()
+    {
+        $offerId = 'D352C4E6-90C6-4120-8DBB-A09B486170CD';
+        $expectedRequest = new Request(
+            'GET',
+            'http://uitdatabank.io/event/D352C4E6-90C6-4120-8DBB-A09B486170CD/calendar-summary?format=lg&language=nl',
+            [
+                'Accept' => 'text/plain'
+            ]
+        );
+
+        $summariesLocation = Http::createFromString('http://uitdatabank.io/');
+        /** @var HttpClient|\PHPUnit_Framework_MockObject_MockObject $httpClient */
+        $httpClient = $this->createMock(HttpClient::class);
+
+        $repository = new HttpCalendarSummaryRepository($httpClient, $summariesLocation);
+
+        $httpClient
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->with($expectedRequest)
+            ->willReturn(new Response());
+
+        $repository->get($offerId, ContentType::PLAIN(), Format::LARGE());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_fetch_calendar_summaries_in_other_languages_if_requested()
+    {
+        $offerId = 'D352C4E6-90C6-4120-8DBB-A09B486170CD';
+        $expectedRequest = new Request(
+            'GET',
+            'http://uitdatabank.io/event/D352C4E6-90C6-4120-8DBB-A09B486170CD/calendar-summary?format=lg&language=fr',
+            [
+                'Accept' => 'text/plain'
+            ]
+        );
+
+        $summariesLocation = Http::createFromString('http://uitdatabank.io/');
+        /** @var HttpClient|\PHPUnit_Framework_MockObject_MockObject $httpClient */
+        $httpClient = $this->createMock(HttpClient::class);
+
+        $repository = new HttpCalendarSummaryRepository($httpClient, $summariesLocation);
+
+        $httpClient
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->with($expectedRequest)
+            ->willReturn(new Response());
+
+        $repository->get($offerId, ContentType::PLAIN(), Format::LARGE(), CalendarLanguage::FRENCH());
     }
 }
