@@ -27,6 +27,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'Lorem Ipsum.',
             )
         );
@@ -104,6 +105,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'vlieg',
+                'logo' => 'img/vlieg.svg',
                 'title' => 'Lorem Ipsum.',
                 'subtitle' => 'Dolor sit amet.',
                 'footer' => 'Cursus mattis lorem ipsum.',
@@ -171,6 +173,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'Lorem Ipsum.',
             )
         );
@@ -204,6 +207,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -239,6 +243,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -265,7 +270,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                     'municipality' => 'Tienen',
                 ],
                 'price' => 'Niet ingevoerd',
-                'dates' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30',
+                'dates' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
                 'taalicoonCount' => 4,
                 'taalicoonDescription' => 'Je spreekt en begrijpt vlot Nederlands.',
             ]
@@ -274,6 +279,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -313,6 +319,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -352,6 +359,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -413,6 +421,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'uit',
+                'logo' => 'img/uit.svg',
                 'title' => 'UiT',
             )
         );
@@ -432,12 +441,53 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         $fileWriter = $this->createHTMLFileWriter(
             array(
                 'brand' => 'paspartoe',
+                'logo' => 'img/paspartoe.svg',
                 'title' => 'UiT',
             )
         );
+
+
         $fileWriter->write($this->filePath, $events);
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_uitpas_info_paspartoe_branded.html');
+        $this->assertHTMLFileContents($expected, $this->filePath);
+    }
+    
+    /**
+     * @test
+     */
+    public function it_shows_a_custom_logo()
+    {
+        $events = [
+            [
+                'type' => 'Cursus of workshop',
+                'title' => 'Koran, kaliefen en kruistochten - De fundamenten van de islam',
+                'description' => 'De islam is niet meer weg te denken uit onze maatschappij. Aan de...',
+                'address' => [
+                    'name' => 'Cultuurcentrum De Kruisboog',
+                    'street' => 'Sint-Jorisplein 20',
+                    'postcode' => '3300',
+                    'municipality' => 'Tienen',
+                ],
+                'price' => 'Niet ingevoerd',
+                'dates' => 'ma 02/03/15 van 13:30 tot 16:30  ma 09/03/15 van 13:30 tot 16:30  ma 16/03/15 van 13:30 tot 16:30  ma 23/03/15 van 13:30 tot 16:30  ma 30/03/15 van 13:30 tot 16:30 ',
+                'taalicoonCount' => 1,
+                'taalicoonDescription' => 'Je spreekt nog geen of niet zo veel Nederlands.',
+            ]
+        ];
+
+        $fileWriter = $this->createHTMLFileWriter(
+            array(
+                'brand' => 'custom',
+                'logo' => 'img/custom.svg',
+                'title' => 'customBrand',
+                'partner' => true
+            )
+        );
+
+        $fileWriter->write($this->filePath, $events);
+
+        $expected = file_get_contents(__DIR__ . '/results/export_event_with_custom_logo.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
     }
 

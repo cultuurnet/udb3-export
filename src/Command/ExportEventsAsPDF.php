@@ -3,7 +3,6 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Brand;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -54,15 +53,18 @@ class ExportEventsAsPDF
 
     /**
      * @param EventExportQuery $query
-     * @param Brand $brand
+     * @param string $brand
+     * @param string $logo
      * @param Title $title
      */
     public function __construct(
         EventExportQuery $query,
-        Brand $brand,
+        string $brand,
+        string $logo,
         Title $title
     ) {
         $this->brand = $brand;
+        $this->logo = $logo;
         $this->query = $query;
         $this->title = $title;
     }
@@ -168,11 +170,19 @@ class ExportEventsAsPDF
     }
 
     /**
-     * @return Brand
+     * @return string
      */
     public function getBrand()
     {
         return $this->brand;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogo()
+    {
+        return $this->logo;
     }
 
     /**

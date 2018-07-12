@@ -13,24 +13,30 @@ abstract class WebArchiveFileFormat
 
     /**
      * @param string $brand
+     * @param string $logo
      * @param string $title
      * @param string|null $subtitle
      * @param string|null $footer
      * @param string|null $publisher
+     * @param string|null $partner
      */
     public function __construct(
         $brand,
+        $logo,
         $title,
         $subtitle = null,
         $footer = null,
-        $publisher = null
+        $publisher = null,
+        $partner = null
     ) {
         $variables = [
             'brand' => $brand,
+            'logo' => $logo,
             'title' => $title,
             'subtitle' => $subtitle,
             'footer' => $footer,
             'publisher' => $publisher,
+            'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe'))
         ];
         $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
     }

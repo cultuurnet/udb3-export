@@ -28,10 +28,15 @@
             <div class="header">
                 <h1 class="header__title">{{ title }}</h1>
                 {% if subtitle -%}
-                    <p class="header__baseline">{{ subtitle }}</p>
-                {%- endif %}
+                <p class="header__baseline">{{ subtitle }}</p>
+                {% endif -%}
+                <div class="header__brand">
+                  <img class="header__brand__image" src="{{logo}}" />
+                  {%- if partner -%}
+                  <p class="header__brand__baseline">in samenwerking met <span class="header__brand__baseline__uit"></span></p>
+                  {%- endif %}
 
-                <img class="header__image" src="img/{{ brand }}.svg" />
+                </div>
             </div>
 
             <div class="columns">

@@ -169,6 +169,7 @@ abstract class WebArchiveFileWriter implements FileWriterInterface
             $this->expandTmpPath($filePath),
             $formattedEvents
         );
+
     }
 
     /**

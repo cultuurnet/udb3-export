@@ -4,7 +4,6 @@ namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Brand;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -38,7 +37,8 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             new ExportEventsAsPDF(
                 new EventExportQuery('city:doetown'),
-                new Brand('vlieg'),
+                'vlieg',
+                'http://foo.bar/logo.svg',
                 new Title('a title')
             ),
             $command
