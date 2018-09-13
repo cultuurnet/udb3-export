@@ -41,8 +41,7 @@ class HttpCalendarSummaryRepository implements CalendarSummaryRepositoryInterfac
     {
         $summaryLocation = $this->calendarSummariesLocation
             ->withPath('/events/' . $offerId . '/calsum')
-            ->withQuery('format=' . $format->getValue())
-            ->withQuery('style=html');
+            ->withQuery('format=' . $format->getValue() . '&style=html');
 
         $summaryRequest = new Request(
             'GET',
