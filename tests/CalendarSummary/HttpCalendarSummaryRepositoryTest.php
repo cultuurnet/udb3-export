@@ -22,7 +22,7 @@ class HttpCalendarSummaryRepositoryTest extends \PHPUnit_Framework_TestCase
         $offerId = 'D352C4E6-90C6-4120-8DBB-A09B486170CD';
         $expectedRequest = new Request(
             'GET',
-            'http://uitdatabank.io/events/D352C4E6-90C6-4120-8DBB-A09B486170CD/calsum?format=lg&style=html',
+            'http://uitdatabank.io/events/D352C4E6-90C6-4120-8DBB-A09B486170CD/calsum?format=lg',
             [
                 'Accept' => 'text/plain'
             ]
