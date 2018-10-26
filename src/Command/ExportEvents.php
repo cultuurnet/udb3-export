@@ -1,11 +1,9 @@
 <?php
-/**
- * @file
- */
 
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\Web\EmailAddress;
 
 /**
@@ -19,28 +17,35 @@ abstract class ExportEvents
     private $query;
 
     /**
+     * @var SapiVersion
+     */
+    private $sapiVersion;
+
+    /**
      * @var null|EmailAddress
      */
     private $address;
 
     /**
-     * @var string[]
+     * @var null|string[]
      */
     private $selection;
 
     /**
-     * @var string[]
+     * @var null|string[]
      */
     private $include;
 
     /**
      * @param EventExportQuery $query
+     * @param SapiVersion $sapiVersion
      * @param EmailAddress|null $address
      * @param string[] $selection
      * @param string[] $include
      */
     public function __construct(
         EventExportQuery $query,
+        SapiVersion $sapiVersion,
         EmailAddress $address = null,
         $selection = null,
         $include = null
@@ -50,6 +55,7 @@ abstract class ExportEvents
         }
 
         $this->query = $query;
+        $this->sapiVersion = $sapiVersion;
         $this->address = $address;
         $this->selection = $selection;
 
@@ -59,15 +65,23 @@ abstract class ExportEvents
     /**
      * @return EventExportQuery The query.
      */
-    public function getQuery()
+    public function getQuery(): EventExportQuery
     {
         return $this->query;
     }
 
     /**
+     * @return SapiVersion
+     */
+    public function getSapiVersion(): SapiVersion
+    {
+        return $this->sapiVersion;
+    }
+
+    /**
      * @return null|EmailAddress
      */
-    public function getAddress()
+    public function getAddress(): ?EmailAddress
     {
         return $this->address;
     }
@@ -75,7 +89,7 @@ abstract class ExportEvents
     /**
      * @return null|\string[]
      */
-    public function getSelection()
+    public function getSelection(): ?array
     {
         return $this->selection;
     }
@@ -83,7 +97,7 @@ abstract class ExportEvents
     /**
      * @return null|\string[]
      */
-    public function getInclude()
+    public function getInclude(): ?array
     {
         return $this->include;
     }

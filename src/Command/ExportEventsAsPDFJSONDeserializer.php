@@ -12,6 +12,7 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Title;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 
@@ -21,6 +22,18 @@ use ValueObjects\Web\EmailAddress;
  */
 class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
 {
+    private $defaultSapiVersion;
+
+    /**
+     * @param $defaultSapiVersion
+     */
+    public function __construct($defaultSapiVersion)
+    {
+        parent::__construct();
+
+        $this->defaultSapiVersion = $defaultSapiVersion;
+    }
+
     /**
      * @param StringLiteral $data
      * @return ExportEventsAsPDF
@@ -34,6 +47,11 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
         }
 
         $query = new EventExportQuery($json->query);
+
+        $sapiVersion = $this->defaultSapiVersion;
+        if (isset($data->sapiVersion)) {
+            $sapiVersion = new SapiVersion($data->sapiVersion);
+        }
 
         if (!isset($json->customizations)) {
             throw new MissingValueException('customizations is missing');
@@ -67,6 +85,7 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
 
         $command = new ExportEventsAsPDF(
             $query,
+            $sapiVersion,
             $brand,
             $logo,
             $title

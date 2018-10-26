@@ -7,6 +7,7 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Title;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\Web\EmailAddress;
 
 class ExportEventsAsPDF
@@ -15,6 +16,11 @@ class ExportEventsAsPDF
      * @var EventExportQuery
      */
     private $query;
+
+    /**
+     * @var SapiVersion
+     */
+    private $sapiVersion;
 
     /**
      * @var null|EmailAddress
@@ -34,36 +40,44 @@ class ExportEventsAsPDF
     /**
      * @var string
      */
-    private $title;
+    private $logo;
 
     /**
      * @var string
+     */
+    private $title;
+
+    /**
+     * @var Subtitle
      */
     private $subtitle;
 
     /**
-     * @var string
+     * @var Footer
      */
     private $footer;
 
     /**
-     * @var string
+     * @var Publisher
      */
     private $publisher;
 
     /**
      * @param EventExportQuery $query
+     * @param SapiVersion $sapiVersion
      * @param string $brand
      * @param string $logo
      * @param Title $title
      */
     public function __construct(
         EventExportQuery $query,
+        SapiVersion $sapiVersion,
         string $brand,
         string $logo,
         Title $title
     ) {
         $this->brand = $brand;
+        $this->sapiVersion = $sapiVersion;
         $this->logo = $logo;
         $this->query = $query;
         $this->title = $title;
@@ -220,15 +234,23 @@ class ExportEventsAsPDF
     /**
      * @return EventExportQuery The query.
      */
-    public function getQuery()
+    public function getQuery(): EventExportQuery
     {
         return $this->query;
     }
 
     /**
+     * @return SapiVersion
+     */
+    public function getSapiVersion(): SapiVersion
+    {
+        return $this->sapiVersion;
+    }
+
+    /**
      * @return null|EmailAddress
      */
-    public function getAddress()
+    public function getAddress(): ?EmailAddress
     {
         return $this->address;
     }
@@ -236,7 +258,7 @@ class ExportEventsAsPDF
     /**
      * @return null|\string[]
      */
-    public function getSelection()
+    public function getSelection(): ?array
     {
         return $this->selection;
     }
