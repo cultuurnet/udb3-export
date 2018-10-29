@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\EventExport;
 
 use Broadway\CommandHandling\CommandHandler;
 use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
+use CultuurNet\UDB3\EventExport\Command\ExportEvents;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsCSV;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsJsonLD;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsOOXML;
@@ -21,9 +22,9 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     use LoggerAwareTrait;
 
     /**
-     * @var EventExportServiceInterface
+     * @var EventExportServiceCollection
      */
-    protected $eventExportService;
+    protected $eventExportServiceCollection;
 
     /**
      * @var string
@@ -41,62 +42,69 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     protected $calendarSummaryRepository;
 
     /**
-     * @param EventExportServiceInterface $eventExportService
+     * @param EventExportServiceCollection $eventExportServiceCollection
      * @param string $princeXMLBinaryPath
      * @param EventInfoServiceInterface|null $uitpas
      * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
      */
     public function __construct(
-        EventExportServiceInterface $eventExportService,
+        EventExportServiceCollection $eventExportServiceCollection,
         $princeXMLBinaryPath,
         EventInfoServiceInterface $uitpas = null,
         CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
-        $this->eventExportService = $eventExportService;
+        $this->eventExportServiceCollection = $eventExportServiceCollection;
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
         $this->uitpas = $uitpas;
         $this->calendarSummaryRepository = $calendarSummaryRepository;
     }
 
+    /**
+     * @param ExportEventsAsJsonLD $exportCommand
+     */
     public function handleExportEventsAsJsonLD(
         ExportEventsAsJsonLD $exportCommand
-    ) {
-        $this->eventExportService->exportEvents(
+    ): void {
+        $this->handleExport(
             new JSONLDFileFormat($exportCommand->getInclude()),
-            $exportCommand->getQuery(),
-            $exportCommand->getAddress(),
-            $this->logger,
-            $exportCommand->getSelection()
+            $exportCommand
         );
     }
 
+    /**
+     * @param ExportEventsAsCSV $exportCommand
+     */
     public function handleExportEventsAsCSV(
         ExportEventsAsCSV $exportCommand
-    ) {
-        $this->eventExportService->exportEvents(
+    ): void {
+        $this->handleExport(
             new CSVFileFormat($exportCommand->getInclude()),
-            $exportCommand->getQuery(),
-            $exportCommand->getAddress(),
-            $this->logger,
-            $exportCommand->getSelection()
+            $exportCommand
         );
     }
 
+    /**
+     * @param ExportEventsAsOOXML $exportCommand
+     */
     public function handleExportEventsAsOOXML(
         ExportEventsAsOOXML $exportCommand
-    ) {
-        $this->eventExportService->exportEvents(
-            new OOXMLFileFormat($exportCommand->getInclude(), $this->uitpas, $this->calendarSummaryRepository),
-            $exportCommand->getQuery(),
-            $exportCommand->getAddress(),
-            $this->logger,
-            $exportCommand->getSelection()
+    ): void {
+        $this->handleExport(
+            new OOXMLFileFormat(
+                $exportCommand->getInclude(),
+                $this->uitpas,
+                $this->calendarSummaryRepository
+            ),
+            $exportCommand
         );
     }
 
+    /**
+     * @param ExportEventsAsPDF $exportEvents
+     */
     public function handleExportEventsAsPDF(
         ExportEventsAsPDF $exportEvents
-    ) {
+    ): void {
         $fileFormat = new PDFWebArchiveFileFormat(
             $this->princeXMLBinaryPath,
             $exportEvents->getBrand(),
@@ -109,7 +117,32 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
             $this->calendarSummaryRepository
         );
 
-        $this->eventExportService->exportEvents(
+        $eventExportService = $this->eventExportServiceCollection->getService(
+            $exportEvents->getSapiVersion()
+        );
+
+        $eventExportService->exportEvents(
+            $fileFormat,
+            $exportEvents->getQuery(),
+            $exportEvents->getAddress(),
+            $this->logger,
+            $exportEvents->getSelection()
+        );
+    }
+
+    /**
+     * @param FileFormatInterface $fileFormat
+     * @param ExportEvents $exportEvents
+     */
+    private function handleExport(
+        FileFormatInterface $fileFormat,
+        ExportEvents $exportEvents
+    ): void {
+        $eventExportService = $this->eventExportServiceCollection->getService(
+            $exportEvents->getSapiVersion()
+        );
+
+        $eventExportService->exportEvents(
             $fileFormat,
             $exportEvents->getQuery(),
             $exportEvents->getAddress(),
