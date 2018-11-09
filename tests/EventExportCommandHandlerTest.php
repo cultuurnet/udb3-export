@@ -22,11 +22,6 @@ class EventExportCommandHandlerTest extends \PHPUnit_Framework_TestCase
     private $eventExportService;
 
     /**
-     * @var EventExportServiceCollection
-     */
-    private $eventExportServiceCollection;
-
-    /**
      * @var string
      */
     private $princeXMLBinaryPath;
@@ -46,8 +41,8 @@ class EventExportCommandHandlerTest extends \PHPUnit_Framework_TestCase
 
         $this->eventExportService = $this->createMock(EventExportServiceInterface::class);
 
-        $this->eventExportServiceCollection = new EventExportServiceCollection();
-        $this->eventExportServiceCollection->addService(
+        $eventExportServiceCollection = new EventExportServiceCollection();
+        $eventExportServiceCollection = $eventExportServiceCollection->addService(
             new SapiVersion(SapiVersion::V2),
             $this->eventExportService
         );
@@ -55,7 +50,7 @@ class EventExportCommandHandlerTest extends \PHPUnit_Framework_TestCase
         $this->princeXMLBinaryPath = 'PrinceXML path';
 
         $this->eventExportCommandHandler = new EventExportCommandHandler(
-            $this->eventExportServiceCollection,
+            $eventExportServiceCollection,
             $this->princeXMLBinaryPath
         );
 

@@ -12,16 +12,17 @@ class EventExportServiceCollectionTest extends \PHPUnit_Framework_TestCase
         $eventExportServiceCollection = new EventExportServiceCollection();
 
         $sapi2EventExportService = $this->createMock(EventExportServiceInterface::class);
-        $eventExportServiceCollection->addService(
-            new SapiVersion(SapiVersion::V2),
-            $sapi2EventExportService
-        );
-
         $sapi3EventExportService = $this->createMock(EventExportServiceInterface::class);
-        $eventExportServiceCollection->addService(
-            new SapiVersion(SapiVersion::V3),
-            $sapi3EventExportService
-        );
+
+        $eventExportServiceCollection = $eventExportServiceCollection
+            ->addService(
+                new SapiVersion(SapiVersion::V2),
+                $sapi2EventExportService
+            )
+            ->addService(
+                new SapiVersion(SapiVersion::V3),
+                $sapi3EventExportService
+            );
 
         $this->assertEquals(
             $sapi2EventExportService,

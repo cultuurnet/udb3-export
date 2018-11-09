@@ -12,12 +12,15 @@ class EventExportServiceCollection
     /**
      * @param SapiVersion $sapiVersion
      * @param EventExportServiceInterface $eventExportService
+     * @return EventExportServiceCollection
      */
     public function addService(
         SapiVersion $sapiVersion,
         EventExportServiceInterface $eventExportService
-    ): void {
-        $this->eventExportServices[$sapiVersion->toNative()] = $eventExportService;
+    ): EventExportServiceCollection {
+        $c = clone $this;
+        $c->eventExportServices[$sapiVersion->toNative()] = $eventExportService;
+        return $c;
     }
 
     /**
