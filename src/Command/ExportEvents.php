@@ -9,7 +9,7 @@ use ValueObjects\Web\EmailAddress;
 /**
  * Base class for event export commands.
  */
-abstract class ExportEvents
+abstract class ExportEvents implements ExportEventsInterface
 {
     /**
      * @var EventExportQuery

@@ -10,7 +10,7 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Title;
 use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\Web\EmailAddress;
 
-class ExportEventsAsPDF
+class ExportEventsAsPDF implements ExportEventsInterface
 {
     /**
      * @var EventExportQuery

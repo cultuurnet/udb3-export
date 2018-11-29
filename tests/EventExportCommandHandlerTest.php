@@ -42,7 +42,7 @@ class EventExportCommandHandlerTest extends \PHPUnit_Framework_TestCase
         $this->eventExportService = $this->createMock(EventExportServiceInterface::class);
 
         $eventExportServiceCollection = new EventExportServiceCollection();
-        $eventExportServiceCollection = $eventExportServiceCollection->addService(
+        $eventExportServiceCollection = $eventExportServiceCollection->withService(
             new SapiVersion(SapiVersion::V2),
             $this->eventExportService
         );

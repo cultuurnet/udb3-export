@@ -4,7 +4,6 @@ namespace CultuurNet\UDB3\EventExport;
 
 use Broadway\CommandHandling\CommandHandler;
 use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
-use CultuurNet\UDB3\EventExport\Command\ExportEvents;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsCSV;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsJsonLD;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsOOXML;
@@ -65,9 +64,10 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     public function handleExportEventsAsJsonLD(
         ExportEventsAsJsonLD $exportCommand
     ): void {
-        $this->handleExport(
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             new JSONLDFileFormat($exportCommand->getInclude()),
-            $exportCommand
+            $exportCommand,
+            $this->logger
         );
     }
 
@@ -77,9 +77,10 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     public function handleExportEventsAsCSV(
         ExportEventsAsCSV $exportCommand
     ): void {
-        $this->handleExport(
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             new CSVFileFormat($exportCommand->getInclude()),
-            $exportCommand
+            $exportCommand,
+            $this->logger
         );
     }
 
@@ -89,13 +90,14 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     public function handleExportEventsAsOOXML(
         ExportEventsAsOOXML $exportCommand
     ): void {
-        $this->handleExport(
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             new OOXMLFileFormat(
                 $exportCommand->getInclude(),
                 $this->uitpas,
                 $this->calendarSummaryRepository
             ),
-            $exportCommand
+            $exportCommand,
+            $this->logger
         );
     }
 
@@ -117,37 +119,10 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
             $this->calendarSummaryRepository
         );
 
-        $eventExportService = $this->eventExportServiceCollection->getService(
-            $exportEvents->getSapiVersion()
-        );
-
-        $eventExportService->exportEvents(
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             $fileFormat,
-            $exportEvents->getQuery(),
-            $exportEvents->getAddress(),
-            $this->logger,
-            $exportEvents->getSelection()
-        );
-    }
-
-    /**
-     * @param FileFormatInterface $fileFormat
-     * @param ExportEvents $exportEvents
-     */
-    private function handleExport(
-        FileFormatInterface $fileFormat,
-        ExportEvents $exportEvents
-    ): void {
-        $eventExportService = $this->eventExportServiceCollection->getService(
-            $exportEvents->getSapiVersion()
-        );
-
-        $eventExportService->exportEvents(
-            $fileFormat,
-            $exportEvents->getQuery(),
-            $exportEvents->getAddress(),
-            $this->logger,
-            $exportEvents->getSelection()
+            $exportEvents,
+            $this->logger
         );
     }
 }
