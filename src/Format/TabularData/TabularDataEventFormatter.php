@@ -120,7 +120,8 @@ class TabularDataEventFormatter
      */
     protected function formatDate($date)
     {
-        $timezone = new \DateTimeZone('Europe/Brussels');
+        $timezoneUtc = new \DateTimeZone('UTC');
+        $timezoneBrussels = new \DateTimeZone('Europe/Brussels');
 
         // Try to create from various formats to maintain backwards
         // compatibility with external systems with older json-ld
@@ -128,10 +129,11 @@ class TabularDataEventFormatter
         $formats = [\DateTime::ATOM, \DateTime::ISO8601, 'Y-m-d\TH:i:s'];
 
         do {
-            $datetime = \DateTime::createFromFormat(current($formats), $date, $timezone);
+            $datetime = \DateTime::createFromFormat(current($formats), $date, $timezoneUtc);
         } while ($datetime === false && next($formats));
 
         if ($datetime instanceof \DateTime) {
+            $datetime->setTimezone($timezoneBrussels);
             return $datetime->format('Y-m-d H:i');
         } else {
             return '';
