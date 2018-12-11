@@ -49,7 +49,7 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
         $query = new EventExportQuery($json->query);
 
         $sapiVersion = $this->defaultSapiVersion;
-        if (isset($data->sapiVersion)) {
+        if (isset($json->sapiVersion)) {
             $sapiVersion = new SapiVersion($data->sapiVersion);
         }
 
