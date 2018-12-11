@@ -5,7 +5,7 @@ namespace CultuurNet\UDB3\EventExport\Command;
 use CultuurNet\Deserializer\DeserializerInterface;
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use ReflectionClass;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 
@@ -16,9 +16,21 @@ class ExportEventsJSONDeserializerTest extends \PHPUnit_Framework_TestCase
      */
     private $deserializer;
 
+    /**
+     * @var SapiVersion
+     */
+    private $sapiVersion;
+
     public function setUp()
     {
-        $this->deserializer = $this->getMockForAbstractClass(ExportEventsJSONDeserializer::class);
+        $this->sapiVersion = new SapiVersion(SapiVersion::V2);
+
+        $this->deserializer = $this->getMockForAbstractClass(
+            ExportEventsJSONDeserializer::class,
+            [
+                $this->sapiVersion,
+            ]
+        );
     }
 
     /**
@@ -34,6 +46,7 @@ class ExportEventsJSONDeserializerTest extends \PHPUnit_Framework_TestCase
             ->method('createCommand')
             ->with(
                 new EventExportQuery('city:leuven'),
+                $this->sapiVersion,
                 null,
                 null,
                 null
@@ -56,6 +69,7 @@ class ExportEventsJSONDeserializerTest extends \PHPUnit_Framework_TestCase
             ->method('createCommand')
             ->with(
                 new EventExportQuery('city:leuven'),
+                $this->sapiVersion,
                 new EmailAddress('foo@bar.com'),
                 [
                     "8102d369-47c5-4ded-ad03-e12ef7b246c3",
@@ -79,7 +93,7 @@ class ExportEventsJSONDeserializerTest extends \PHPUnit_Framework_TestCase
     public function it_throws_an_exception_when_query_is_missing()
     {
         $data = new StringLiteral('{"email":"foo@bar.com"}');
-        $this->setExpectedException(MissingValueException::class);
+        $this->expectException(MissingValueException::class);
         $this->deserializer->deserialize($data);
     }
 
@@ -102,6 +116,7 @@ class ExportEventsJSONDeserializerTest extends \PHPUnit_Framework_TestCase
 
         $expectedCommand = new $expectedCommandType(
             new EventExportQuery('city:leuven'),
+            $this->sapiVersion,
             new EmailAddress('foo@bar.com'),
             [
                 "8102d369-47c5-4ded-ad03-e12ef7b246c3",
@@ -125,15 +140,21 @@ class ExportEventsJSONDeserializerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                new ExportEventsAsCSVJSONDeserializer(),
+                new ExportEventsAsCSVJSONDeserializer(
+                    new SapiVersion(SapiVersion::V2)
+                ),
                 ExportEventsAsCSV::class,
             ],
             [
-                new ExportEventsAsJsonLDJSONDeserializer(),
+                new ExportEventsAsJsonLDJSONDeserializer(
+                    new SapiVersion(SapiVersion::V2)
+                ),
                 ExportEventsAsJsonLD::class,
             ],
             [
-                new ExportEventsAsOOXMLJSONDeserializer(),
+                new ExportEventsAsOOXMLJSONDeserializer(
+                    new SapiVersion(SapiVersion::V2)
+                ),
                 ExportEventsAsOOXML::class,
             ],
         ];

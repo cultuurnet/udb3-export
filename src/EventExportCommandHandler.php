@@ -21,9 +21,9 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     use LoggerAwareTrait;
 
     /**
-     * @var EventExportServiceInterface
+     * @var EventExportServiceCollection
      */
-    protected $eventExportService;
+    protected $eventExportServiceCollection;
 
     /**
      * @var string
@@ -41,62 +41,72 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     protected $calendarSummaryRepository;
 
     /**
-     * @param EventExportServiceInterface $eventExportService
+     * @param EventExportServiceCollection $eventExportServiceCollection
      * @param string $princeXMLBinaryPath
      * @param EventInfoServiceInterface|null $uitpas
      * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
      */
     public function __construct(
-        EventExportServiceInterface $eventExportService,
+        EventExportServiceCollection $eventExportServiceCollection,
         $princeXMLBinaryPath,
         EventInfoServiceInterface $uitpas = null,
         CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
-        $this->eventExportService = $eventExportService;
+        $this->eventExportServiceCollection = $eventExportServiceCollection;
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
         $this->uitpas = $uitpas;
         $this->calendarSummaryRepository = $calendarSummaryRepository;
     }
 
+    /**
+     * @param ExportEventsAsJsonLD $exportCommand
+     */
     public function handleExportEventsAsJsonLD(
         ExportEventsAsJsonLD $exportCommand
-    ) {
-        $this->eventExportService->exportEvents(
+    ): void {
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             new JSONLDFileFormat($exportCommand->getInclude()),
-            $exportCommand->getQuery(),
-            $exportCommand->getAddress(),
-            $this->logger,
-            $exportCommand->getSelection()
+            $exportCommand,
+            $this->logger
         );
     }
 
+    /**
+     * @param ExportEventsAsCSV $exportCommand
+     */
     public function handleExportEventsAsCSV(
         ExportEventsAsCSV $exportCommand
-    ) {
-        $this->eventExportService->exportEvents(
+    ): void {
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             new CSVFileFormat($exportCommand->getInclude()),
-            $exportCommand->getQuery(),
-            $exportCommand->getAddress(),
-            $this->logger,
-            $exportCommand->getSelection()
+            $exportCommand,
+            $this->logger
         );
     }
 
+    /**
+     * @param ExportEventsAsOOXML $exportCommand
+     */
     public function handleExportEventsAsOOXML(
         ExportEventsAsOOXML $exportCommand
-    ) {
-        $this->eventExportService->exportEvents(
-            new OOXMLFileFormat($exportCommand->getInclude(), $this->uitpas, $this->calendarSummaryRepository),
-            $exportCommand->getQuery(),
-            $exportCommand->getAddress(),
-            $this->logger,
-            $exportCommand->getSelection()
+    ): void {
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
+            new OOXMLFileFormat(
+                $exportCommand->getInclude(),
+                $this->uitpas,
+                $this->calendarSummaryRepository
+            ),
+            $exportCommand,
+            $this->logger
         );
     }
 
+    /**
+     * @param ExportEventsAsPDF $exportEvents
+     */
     public function handleExportEventsAsPDF(
         ExportEventsAsPDF $exportEvents
-    ) {
+    ): void {
         $fileFormat = new PDFWebArchiveFileFormat(
             $this->princeXMLBinaryPath,
             $exportEvents->getBrand(),
@@ -109,12 +119,10 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
             $this->calendarSummaryRepository
         );
 
-        $this->eventExportService->exportEvents(
+        $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
             $fileFormat,
-            $exportEvents->getQuery(),
-            $exportEvents->getAddress(),
-            $this->logger,
-            $exportEvents->getSelection()
+            $exportEvents,
+            $this->logger
         );
     }
 }

@@ -8,11 +8,16 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Title;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 
 class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var SapiVersion
+     */
+    private $sapiVersion;
 
     /**
      * @var ExportEventsAsPDFJSONDeserializer
@@ -21,7 +26,10 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->deserializer = new ExportEventsAsPDFJSONDeserializer();
+        $this->sapiVersion = new SapiVersion(SapiVersion::V2);
+        $this->deserializer = new ExportEventsAsPDFJSONDeserializer(
+            $this->sapiVersion
+        );
     }
 
     /**
@@ -37,6 +45,7 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             new ExportEventsAsPDF(
                 new EventExportQuery('city:doetown'),
+                $this->sapiVersion,
                 'vlieg',
                 'http://foo.bar/logo.svg',
                 new Title('a title')
@@ -53,7 +62,8 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
     {
         $exportData = $this->getJSONStringFromFile('export_pdf_data_without_query.json');
 
-        $this->setExpectedException(MissingValueException::class, 'query is missing');
+        $this->expectException(MissingValueException::class);
+        $this->expectExceptionMessage('query is missing');
         $this->deserializer->deserialize($exportData);
     }
 
@@ -64,7 +74,8 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
     {
         $exportData = $this->getJSONStringFromFile('export_pdf_data_without_brand.json');
 
-        $this->setExpectedException(MissingValueException::class, 'brand is missing');
+        $this->expectException(MissingValueException::class);
+        $this->expectExceptionMessage('brand is missing');
         $this->deserializer->deserialize($exportData);
     }
 
@@ -75,13 +86,17 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
     {
         $exportData = $this->getJSONStringFromFile('export_pdf_data_without_title.json');
 
-        $this->setExpectedException(MissingValueException::class, 'title is missing');
+        $this->expectException(MissingValueException::class);
+        $this->expectExceptionMessage('title is missing');
         $this->deserializer->deserialize($exportData);
     }
 
     /**
      * @test
      * @dataProvider exportPropertyDataProvider
+     * @param $propertyName
+     * @param $expectedValue
+     * @param $getter
      */
     public function it_includes_optional_properties(
         $propertyName,

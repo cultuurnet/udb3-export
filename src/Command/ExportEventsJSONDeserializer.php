@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\EventExport\Command;
 use CultuurNet\Deserializer\JSONDeserializer;
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 
@@ -14,6 +15,18 @@ use ValueObjects\Web\EmailAddress;
  */
 abstract class ExportEventsJSONDeserializer extends JSONDeserializer
 {
+    private $defaultSapiVersion;
+
+    /**
+     * @param $defaultSapiVersion
+     */
+    public function __construct($defaultSapiVersion)
+    {
+        parent::__construct();
+
+        $this->defaultSapiVersion = $defaultSapiVersion;
+    }
+
     /**
      * @param StringLiteral $data
      * @return ExportEvents
@@ -25,10 +38,14 @@ abstract class ExportEventsJSONDeserializer extends JSONDeserializer
         if (!isset($data->query)) {
             throw new MissingValueException('query is missing');
         }
-
         $query = new EventExportQuery($data->query);
-        $email = $selection = $include = null;
 
+        $sapiVersion = $this->defaultSapiVersion;
+        if (isset($data->sapiVersion)) {
+            $sapiVersion = new SapiVersion($data->sapiVersion);
+        }
+
+        $email = $selection = $include = null;
         // @todo This throws an exception when the e-mail is invalid. How do we handle this?
         if (isset($data->email)) {
             $email = new EmailAddress($data->email);
@@ -42,11 +59,18 @@ abstract class ExportEventsJSONDeserializer extends JSONDeserializer
             $include = $data->include;
         }
 
-        return $this->createCommand($query, $email, $selection, $include);
+        return $this->createCommand(
+            $query,
+            $sapiVersion,
+            $email,
+            $selection,
+            $include
+        );
     }
 
     /**
      * @param EventExportQuery $query
+     * @param SapiVersion $sapiVersion
      * @param EmailAddress|null $address
      * @param string[]|null $selection
      * @param string[]|null $include
@@ -54,6 +78,7 @@ abstract class ExportEventsJSONDeserializer extends JSONDeserializer
      */
     abstract protected function createCommand(
         EventExportQuery $query,
+        SapiVersion $sapiVersion,
         EmailAddress $address = null,
         $selection = null,
         $include = null

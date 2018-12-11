@@ -7,11 +7,11 @@ use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Title;
+use CultuurNet\UDB3\EventExport\SapiVersion;
 use ValueObjects\Web\EmailAddress;
 
 class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var ExportEventsAsPDF
      */
@@ -26,6 +26,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
     {
         $this->export = new ExportEventsAsPDF(
             new EventExportQuery('*.*'),
+            new SapiVersion(SapiVersion::V2),
             'vlieg',
             'http://foo.bar/logo.svg',
             new Title('title')
