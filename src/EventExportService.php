@@ -253,14 +253,14 @@ class EventExportService implements EventExportServiceInterface
     /**
      * Generator that yields each unique search result.
      *
-     * @param string|object $query
+     * @param EventExportQuery $query
      * @param LoggerInterface $logger
      *
      * @return \Generator
      */
-    private function search($query, LoggerInterface $logger)
+    private function search(EventExportQuery $query, LoggerInterface $logger)
     {
-        $events = $this->resultsGenerator->search($query);
+        $events = $this->resultsGenerator->search((string)$query);
 
         foreach ($events as $eventIdentifier) {
             $event = $this->getEvent((string) $eventIdentifier->getIri(), $logger);
