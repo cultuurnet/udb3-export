@@ -50,7 +50,7 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
 
         $sapiVersion = $this->defaultSapiVersion;
         if (isset($json->sapiVersion)) {
-            $sapiVersion = new SapiVersion($data->sapiVersion);
+            $sapiVersion = new SapiVersion($json->sapiVersion);
         }
 
         if (!isset($json->customizations)) {
