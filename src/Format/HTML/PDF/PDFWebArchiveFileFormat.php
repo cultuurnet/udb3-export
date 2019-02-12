@@ -32,7 +32,7 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
      * @param string|null $subTitle
      * @param string|null $footer
      * @param string|null $publisher
-     * @param boolean $onMap
+     * @param bool $onMap
      * @param EventInfoServiceInterface|null $uitpas
      * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      */

@@ -63,7 +63,7 @@ class ExportEventsAsPDF implements ExportEventsInterface
     private $publisher;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $onMap;
 
@@ -189,9 +189,9 @@ class ExportEventsAsPDF implements ExportEventsInterface
     }
 
     /**
-     * @param boolean $onMap
+     * @param bool $onMap
      */
-    public function withOnMap(boolean $onMap)
+    public function withOnMap(bool $onMap)
     {
         $exportEvents = clone $this;
         $exportEvents->setOnMap($onMap);
@@ -199,9 +199,9 @@ class ExportEventsAsPDF implements ExportEventsInterface
     }
 
     /**
-     * @param boolean $onMap
+     * @param bool $onMap
      */
-    private function setOnMap(boolean $onMap)
+    private function setOnMap(bool $onMap)
     {
         $this->onMap = $onMap;
     }
@@ -255,7 +255,7 @@ class ExportEventsAsPDF implements ExportEventsInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getOnMap()
     {
