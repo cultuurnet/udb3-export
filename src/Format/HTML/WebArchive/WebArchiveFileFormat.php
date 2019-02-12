@@ -20,6 +20,7 @@ abstract class WebArchiveFileFormat
      * @param string|null $publisher
      * @param string|null $partner
      * @param boolean $onMap
+     * @param string|null $gmapApiKey
      */
     public function __construct(
         $brand,
@@ -29,7 +30,8 @@ abstract class WebArchiveFileFormat
         $footer = null,
         $publisher = null,
         $partner = null,
-        $onMap = false
+        $onMap = false,
+        $gmapApiKey = null
     ) {
         $variables = [
             'brand' => $brand,
@@ -38,7 +40,8 @@ abstract class WebArchiveFileFormat
             'subtitle' => $subtitle,
             'footer' => $footer,
             'publisher' => $publisher,
-            'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe'))
+            'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe')),
+            'gmapApiKey' => $gmapApiKey
         ];
         if ($onMap) {
             $this->htmlFileWriter = new HTMLFileWriter('map-export.html.twig', $variables);

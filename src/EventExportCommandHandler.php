@@ -41,21 +41,29 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
     protected $calendarSummaryRepository;
 
     /**
+     * @var string
+     */
+    protected $gmapApiKey;
+
+    /**
      * @param EventExportServiceCollection $eventExportServiceCollection
      * @param string $princeXMLBinaryPath
      * @param EventInfoServiceInterface|null $uitpas
      * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
+     * @param string $gmapApiKey
      */
     public function __construct(
         EventExportServiceCollection $eventExportServiceCollection,
         $princeXMLBinaryPath,
         EventInfoServiceInterface $uitpas = null,
-        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
+        CalendarSummaryRepositoryInterface $calendarSummaryRepository = null,
+        $gmapApiKey
     ) {
         $this->eventExportServiceCollection = $eventExportServiceCollection;
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
         $this->uitpas = $uitpas;
         $this->calendarSummaryRepository = $calendarSummaryRepository;
+        $this->gmapApiKey = $gmapApiKey;
     }
 
     /**
@@ -117,7 +125,8 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
             $exportEvents->getPublisher(),
             $exportEvents->getOnMap(),
             $this->uitpas,
-            $this->calendarSummaryRepository
+            $this->calendarSummaryRepository,
+            $this->gmapApiKey
         );
 
         $this->eventExportServiceCollection->delegateToServiceWithAppropriateSapiVersion(
