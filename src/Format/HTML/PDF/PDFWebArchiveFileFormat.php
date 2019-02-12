@@ -32,6 +32,7 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
      * @param string|null $subTitle
      * @param string|null $footer
      * @param string|null $publisher
+     * @param boolean $onMap
      * @param EventInfoServiceInterface|null $uitpas
      * @param CalendarSummaryRepositoryInterface|null $calendarSummaryRepository
      */
@@ -43,10 +44,11 @@ class PDFWebArchiveFileFormat extends WebArchiveFileFormat implements FileFormat
         $subTitle = null,
         $footer = null,
         $publisher = null,
+        $onMap = false,
         EventInfoServiceInterface $uitpas = null,
         CalendarSummaryRepositoryInterface $calendarSummaryRepository = null
     ) {
-        parent::__construct($brand, $logo, $title, $subTitle, $footer, $publisher);
+        parent::__construct($brand, $logo, $title, $subTitle, $footer, $publisher, $onMap);
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
         $this->uitpas = $uitpas;
         $this->calendarSummaryRepository = $calendarSummaryRepository;

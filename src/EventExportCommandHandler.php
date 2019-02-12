@@ -115,6 +115,7 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
             $exportEvents->getSubtitle(),
             $exportEvents->getFooter(),
             $exportEvents->getPublisher(),
+            $exportEvents->getOnMap(),
             $this->uitpas,
             $this->calendarSummaryRepository
         );

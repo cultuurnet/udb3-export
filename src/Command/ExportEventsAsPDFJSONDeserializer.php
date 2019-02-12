@@ -118,6 +118,12 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
             );
         }
 
+        if (isset($customizations->onMap)) {
+            $command = $command->withOnMap(
+                $customizations->onMap
+            );
+        }
+
         return $command;
     }
 }

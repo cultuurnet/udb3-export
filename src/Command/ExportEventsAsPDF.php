@@ -63,6 +63,11 @@ class ExportEventsAsPDF implements ExportEventsInterface
     private $publisher;
 
     /**
+     * @var boolean
+     */
+    private $onMap;
+
+    /**
      * @param EventExportQuery $query
      * @param SapiVersion $sapiVersion
      * @param string $brand
@@ -184,6 +189,24 @@ class ExportEventsAsPDF implements ExportEventsInterface
     }
 
     /**
+     * @param boolean $onMap
+     */
+    public function withOnMap(boolean $onMap)
+    {
+        $exportEvents = clone $this;
+        $exportEvents->setOnMap($onMap);
+        return $exportEvents;
+    }
+
+    /**
+     * @param boolean $onMap
+     */
+    private function setOnMap(boolean $onMap)
+    {
+        $this->onMap = $onMap;
+    }
+
+    /**
      * @return string
      */
     public function getBrand()
@@ -229,6 +252,14 @@ class ExportEventsAsPDF implements ExportEventsInterface
     public function getPublisher()
     {
         return $this->publisher;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getOnMap()
+    {
+        return $this->onMap;
     }
 
     /**
