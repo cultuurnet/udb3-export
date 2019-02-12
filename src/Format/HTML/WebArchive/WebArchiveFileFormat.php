@@ -19,6 +19,7 @@ abstract class WebArchiveFileFormat
      * @param string|null $footer
      * @param string|null $publisher
      * @param string|null $partner
+     * @param boolean $onMap
      */
     public function __construct(
         $brand,
@@ -27,7 +28,8 @@ abstract class WebArchiveFileFormat
         $subtitle = null,
         $footer = null,
         $publisher = null,
-        $partner = null
+        $partner = null,
+        $onMap = false
     ) {
         $variables = [
             'brand' => $brand,
@@ -38,7 +40,11 @@ abstract class WebArchiveFileFormat
             'publisher' => $publisher,
             'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe'))
         ];
-        $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
+        if ($onMap) {
+            $this->htmlFileWriter = new HTMLFileWriter('map-export.html.twig', $variables);
+        } else {
+            $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
+        }
     }
 
     /**
