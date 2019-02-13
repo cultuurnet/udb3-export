@@ -50,14 +50,14 @@ class EventExportCommandHandler extends CommandHandler implements LoggerAwareInt
      * @param string $princeXMLBinaryPath
      * @param EventInfoServiceInterface|null $uitpas
      * @param CalendarSummaryRepositoryInterface $calendarSummaryRepository
-     * @param string $gmapApiKey
+     * @param string|null $gmapApiKey
      */
     public function __construct(
         EventExportServiceCollection $eventExportServiceCollection,
         $princeXMLBinaryPath,
         EventInfoServiceInterface $uitpas = null,
         CalendarSummaryRepositoryInterface $calendarSummaryRepository = null,
-        $gmapApiKey
+        $gmapApiKey = null
     ) {
         $this->eventExportServiceCollection = $eventExportServiceCollection;
         $this->princeXMLBinaryPath = $princeXMLBinaryPath;
