@@ -165,9 +165,21 @@ abstract class WebArchiveFileWriter implements FileWriterInterface
             }
         );
 
+        $formattedLocations = new TransformingIteratorIterator(
+            $events,
+            function ($event, $eventLocation) use ($formatter) {
+                $urlParts = explode('/', $eventLocation);
+                $eventId = array_pop($urlParts);
+                return $formatter->formatGeoLocation($eventId, $event);
+            }
+        );
+
+        $formattedData['events'] = $formattedEvents;
+        $formattedData['locations'] = $formattedLocations;
+
         $this->htmlFileWriter->write(
             $this->expandTmpPath($filePath),
-            $formattedEvents
+            $formattedData
         );
 
     }

@@ -78,7 +78,8 @@ class HTMLFileWriter implements FileWriterInterface
     {
         $variables = $this->variables;
 
-        $variables['events'] = $events;
+        $variables['events'] = $events['events'];
+        $variables['locations'] = $events['locations'];
 
         return $this->twig->render($this->template, $variables);
     }

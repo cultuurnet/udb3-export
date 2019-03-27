@@ -173,6 +173,31 @@ class HTMLEventFormatter
     }
 
     /**
+     * @param string $eventId
+     *   The event's CDB ID.
+     * @param string $eventString
+     *   The cultural event encoded as JSON-LD
+     *
+     * @return array
+     *   The event location as an array suitable for rendering with HTMLFileWriter
+     */
+    public function formatGeoLocation($eventId, $eventString)
+    {
+        $event = json_decode($eventString);
+
+        $formattedGeoLocation = [];
+
+        if (property_exists($event, 'location')) {
+            if (property_exists($event->location, 'geo')) {
+                $formattedGeoLocation['geo'] = reset($event->location->geo);
+            }
+            $formattedGeoLocation['title'] = reset($event->name);
+        }
+
+        return $formattedGeoLocation;
+    }
+
+    /**
      * Adds the calendar info by trying to fetch the large summary.
      * If the large formatted summary is missing, the summary that is available on the event will be used as fallback.
      *
