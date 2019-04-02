@@ -172,6 +172,69 @@ class HTMLEventFormatter
         return $formattedEvent;
     }
 
+    public function formatEventOnMap($eventString)
+    {
+        $event = json_decode($eventString);
+
+        $formattedEvent = [];
+
+        if (isset($event->image)) {
+            $formattedEvent['image'] = $event->image;
+        }
+
+        $type = EventType::fromJSONLDEvent($eventString);
+        if ($type) {
+            $formattedEvent['type'] = $type->getLabel();
+        }
+
+        $formattedEvent['title'] = reset($event->name);
+
+        if (property_exists($event, 'description')) {
+            $formattedEvent['description'] = $this->filters->filter(
+                reset($event->description)
+            );
+        }
+
+        $address = [];
+
+        if (property_exists($event, 'location')) {
+            if (property_exists($event->location, 'name')) {
+                $address['name'] = reset($event->location->name);
+            }
+
+            if (property_exists($event->location, 'address')) {
+                $address += [
+                    'street' => $this->getAddressField($event, 'streetAddress'),
+                    'postcode' => $this->getAddressField($event, 'postalCode'),
+                    'municipality' => $this->getAddressField($event, 'addressLocality')
+                ];
+            }
+        }
+
+        if (!empty($address)) {
+            $formattedEvent['address'] = $address;
+        }
+
+        $this->addPriceInfo($event, $formattedEvent);
+
+        //$this->addCalendarInfo($eventId, $event, $formattedEvent);
+
+        //$this->addUitpasInfo($eventId, $formattedEvent);
+
+        $this->formatTaaliconen($event, $formattedEvent);
+
+        $formattedEvent['brands'] = $this->getBrands($event);
+
+        if (isset($event->typicalAgeRange)) {
+            $ageRange = $event->typicalAgeRange;
+            $formattedEvent['ageFrom'] = explode('-', $ageRange)[0];
+        }
+
+        $this->addMediaObject($event, $formattedEvent);
+
+        return $formattedEvent;
+    }
+
     /**
      * @param string $eventId
      *   The event's CDB ID.

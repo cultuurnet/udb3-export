@@ -41,6 +41,7 @@
     </div>
 
     <div class="columns">
+        {{ events|join(',') }}
         {%- for event in events %}
 
             <section class="activity
@@ -162,11 +163,12 @@
                 {%- endif %}
 
             </section>
+
         {%- endfor %}
 
-        {%- for location in locations  %}
+        {#{%- for location in locations  %}
             <p>{{ location.title }}</p>
-        {%- endfor  %}
+        {%- endfor  %}#}
 
     </div>
 </div>

@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\EventExport\Format\HTML\WebArchive;
 use CultuurNet\UDB3\EventExport\CalendarSummary\CalendarSummaryRepositoryInterface;
 use CultuurNet\UDB3\EventExport\Format\HTML\HTMLEventFormatter;
 use CultuurNet\UDB3\EventExport\Format\HTML\HTMLFileWriter;
+use CultuurNet\UDB3\EventExport\Format\HTML\HTMLFileWriterOnMap;
 use CultuurNet\UDB3\EventExport\Format\HTML\TransformingIteratorIterator;
 use CultuurNet\UDB3\EventExport\Format\HTML\Uitpas\EventInfo\EventInfoServiceInterface;
 use CultuurNet\UDB3\EventExport\FileWriterInterface;
@@ -68,7 +69,11 @@ abstract class WebArchiveFileWriter implements FileWriterInterface
     {
         $tmpDir = $this->createTemporaryArchiveDirectory();
 
-        $this->writeHtml($tmpDir, $events);
+        if ($this->htmlFileWriter instanceOf HTMLFileWriterOnMap) {
+            $this->writeHtmlForMap($tmpDir, $events);
+        } else {
+            $this->writeHtml($tmpDir, $events);
+        }
         $this->copyAssets($tmpDir);
 
         return $tmpDir;
@@ -165,23 +170,37 @@ abstract class WebArchiveFileWriter implements FileWriterInterface
             }
         );
 
-        $formattedLocations = new TransformingIteratorIterator(
-            $events,
-            function ($event, $eventLocation) use ($formatter) {
-                $urlParts = explode('/', $eventLocation);
-                $eventId = array_pop($urlParts);
-                return $formatter->formatGeoLocation($eventId, $event);
-            }
+        $this->htmlFileWriter->write(
+            $this->expandTmpPath($filePath),
+            $formattedEvents
         );
 
+    }
+
+    protected function writeHtmlForMap($dir, $events) {
+        $filePath = $dir . '/index.html';
+        $formatter = new HTMLEventFormatter($this->uitpas, $this->calendarSummaryRepository);
+
+        $formattedEvents = [];
+        $formattedLocations = [];
+
+        if (!is_array($events)) {
+            $events = iterator_to_array($events);
+        }
+
+        foreach($events as $key => $event) {
+            $formattedEvents[] = $key;
+            //$formattedEvents[] = $formatter->formatEventOnMap($event);
+            //$formattedLocations[] = $formatter->formatGeoLocation($eventId, $event);
+        }
+
         $formattedData['events'] = $formattedEvents;
-        $formattedData['locations'] = $formattedLocations;
+        //$formattedData['locations'] = $formattedLocations;
 
         $this->htmlFileWriter->write(
             $this->expandTmpPath($filePath),
             $formattedData
         );
-
     }
 
     /**

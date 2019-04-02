@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Format\HTML\WebArchive;
 
 use CultuurNet\UDB3\EventExport\Format\HTML\HTMLFileWriter;
+use CultuurNet\UDB3\EventExport\Format\HTML\HTMLFileWriterOnMap;
 
 abstract class WebArchiveFileFormat
 {
@@ -44,7 +45,7 @@ abstract class WebArchiveFileFormat
             'gmapApiKey' => $gmapApiKey
         ];
         if ($onMap) {
-            $this->htmlFileWriter = new HTMLFileWriter('map-export.html.twig', $variables);
+            $this->htmlFileWriter = new HTMLFileWriterOnMap('map-export.html.twig', $variables);
         } else {
             $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
         }
