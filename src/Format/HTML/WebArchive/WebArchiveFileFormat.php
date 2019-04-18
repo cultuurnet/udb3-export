@@ -20,7 +20,6 @@ abstract class WebArchiveFileFormat
      * @param string|null $subtitle
      * @param string|null $footer
      * @param string|null $publisher
-     * @param string|null $partner
      * @param Twig_Environment|null $twig
      */
     public function __construct(
@@ -31,7 +30,6 @@ abstract class WebArchiveFileFormat
         $subtitle = null,
         $footer = null,
         $publisher = null,
-        $partner = null,
         Twig_Environment $twig = null
     ) {
         $variables = [
