@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
+use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -63,24 +64,32 @@ class ExportEventsAsPDF implements ExportEventsInterface
     private $publisher;
 
     /**
+     * @var PDFTemplate
+     */
+    private $pdfTemplate;
+
+    /**
      * @param EventExportQuery $query
      * @param SapiVersion $sapiVersion
      * @param string $brand
      * @param string $logo
      * @param Title $title
+     * @param PDFTemplate $pdfTemplate
      */
     public function __construct(
         EventExportQuery $query,
         SapiVersion $sapiVersion,
         string $brand,
         string $logo,
-        Title $title
+        Title $title,
+        PDFTemplate $pdfTemplate
     ) {
         $this->brand = $brand;
         $this->sapiVersion = $sapiVersion;
         $this->logo = $logo;
         $this->query = $query;
         $this->title = $title;
+        $this->pdfTemplate = $pdfTemplate;
     }
 
     /**
@@ -229,6 +238,14 @@ class ExportEventsAsPDF implements ExportEventsInterface
     public function getPublisher()
     {
         return $this->publisher;
+    }
+
+    /**
+     * @return PDFTemplate
+     */
+    public function getPDFTemplate()
+    {
+        return $this->pdfTemplate;
     }
 
     /**

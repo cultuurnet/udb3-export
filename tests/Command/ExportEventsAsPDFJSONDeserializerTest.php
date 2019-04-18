@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
+use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -48,7 +49,8 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
                 $this->sapiVersion,
                 'vlieg',
                 'http://foo.bar/logo.svg',
-                new Title('a title')
+                new Title('a title'),
+                PDFTemplate::TIPS()
             ),
             $command
         );
@@ -93,21 +95,17 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider exportPropertyDataProvider
-     * @param $propertyName
-     * @param $expectedValue
-     * @param $getter
      */
-    public function it_includes_optional_properties(
-        $propertyName,
-        $expectedValue,
-        $getter
-    ) {
+    public function it_includes_optional_properties()
+    {
         $exportData = $this->getJSONStringFromFile('export_pdf_data.json');
         $command = $this->deserializer->deserialize($exportData);
 
-        $this->assertEquals($expectedValue, $command->{$getter}());
-
+        $this->assertEquals(new Subtitle('a subtitle'), $command->getSubtitle());
+        $this->assertEquals(new Publisher('a publisher'), $command->getPublisher());
+        $this->assertEquals(new Footer('a footer'), $command->getFooter());
+        $this->assertEquals(new EmailAddress('john@doe.com'), $command->getAddress());
+        $this->assertEquals(PDFTemplate::MAP(), $command->getPDFTemplate());
     }
 
     /**

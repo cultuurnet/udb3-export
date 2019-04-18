@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
+use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -17,11 +18,6 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
      */
     private $export;
 
-    /**
-     * @var ExportEventsAsPDF
-     */
-    private $clonedExport;
-
     public function setUp()
     {
         $this->export = new ExportEventsAsPDF(
@@ -29,9 +25,9 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
             new SapiVersion(SapiVersion::V2),
             'vlieg',
             'http://foo.bar/logo.svg',
-            new Title('title')
+            new Title('title'),
+            PDFTemplate::TIPS()
         );
-        $this->clonedExport = clone $this->export;
     }
 
     /**
@@ -41,7 +37,6 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
     {
         $query = new EventExportQuery('*.*');
         $this->assertEquals($query, $this->export->getQuery());
-        $this->assertEquals($this->clonedExport, $this->export);
     }
 
     /**
@@ -51,7 +46,6 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
     {
         $query = 'vlieg';
         $this->assertEquals($query, $this->export->getBrand());
-        $this->assertEquals($this->clonedExport, $this->export);
     }
 
     /**
@@ -61,7 +55,15 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
     {
         $query = new Title('title');
         $this->assertEquals($query, $this->export->getTitle());
-        $this->assertEquals($this->clonedExport, $this->export);
+    }
+
+    /**
+     * @test
+     */
+    public function it_includes_a_template()
+    {
+        $template = PDFTemplate::TIPS();
+        $this->assertEquals($template, $this->export->getPDFTemplate());
     }
 
     /**
@@ -74,7 +76,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($email, $newExport->getAddress());
 
-        $this->assertNotModified($newExport);
+        $this->assertNotSame($this->export, $newExport);
     }
 
     /**
@@ -87,7 +89,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($subtitle, $newExport->getSubtitle());
 
-        $this->assertNotModified($newExport);
+        $this->assertNotSame($this->export, $newExport);
     }
 
     /**
@@ -100,7 +102,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($footer, $newExport->getFooter());
 
-        $this->assertNotModified($newExport);
+        $this->assertNotSame($this->export, $newExport);
     }
 
     /**
@@ -113,7 +115,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($publisher, $newExport->getPublisher());
 
-        $this->assertNotModified($newExport);
+        $this->assertNotSame($this->export, $newExport);
     }
 
     /**
@@ -129,12 +131,6 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($selection, $newExport->getSelection());
 
-        $this->assertNotModified($newExport);
-    }
-
-    private function assertNotModified($newExport)
-    {
-        $this->assertNotSame($newExport, $this->export);
-        $this->assertEquals($this->clonedExport, $this->export);
+        $this->assertNotSame($this->export, $newExport);
     }
 }
