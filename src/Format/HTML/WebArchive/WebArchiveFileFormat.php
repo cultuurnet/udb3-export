@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Format\HTML\WebArchive;
 
 use CultuurNet\UDB3\EventExport\Format\HTML\HTMLFileWriter;
+use Twig_Environment;
 
 abstract class WebArchiveFileFormat
 {
@@ -19,7 +20,7 @@ abstract class WebArchiveFileFormat
      * @param string|null $subtitle
      * @param string|null $footer
      * @param string|null $publisher
-     * @param string|null $partner
+     * @param Twig_Environment|null $twig
      */
     public function __construct(
         WebArchiveTemplate $template,
@@ -29,7 +30,7 @@ abstract class WebArchiveFileFormat
         $subtitle = null,
         $footer = null,
         $publisher = null,
-        $partner = null
+        Twig_Environment $twig = null
     ) {
         $variables = [
             'brand' => $brand,
@@ -41,7 +42,7 @@ abstract class WebArchiveFileFormat
             'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe')),
             'showMap' => $template->sameValueAs(WebArchiveTemplate::MAP()),
         ];
-        $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
+        $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables, $twig);
     }
 
     /**
