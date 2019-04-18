@@ -3,7 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
+use CultuurNet\UDB3\EventExport\Format\HTML\WebArchive\WebArchiveTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -64,9 +64,9 @@ class ExportEventsAsPDF implements ExportEventsInterface
     private $publisher;
 
     /**
-     * @var PDFTemplate
+     * @var WebArchiveTemplate
      */
-    private $pdfTemplate;
+    private $template;
 
     /**
      * @param EventExportQuery $query
@@ -74,7 +74,7 @@ class ExportEventsAsPDF implements ExportEventsInterface
      * @param string $brand
      * @param string $logo
      * @param Title $title
-     * @param PDFTemplate $pdfTemplate
+     * @param WebArchiveTemplate $template
      */
     public function __construct(
         EventExportQuery $query,
@@ -82,14 +82,14 @@ class ExportEventsAsPDF implements ExportEventsInterface
         string $brand,
         string $logo,
         Title $title,
-        PDFTemplate $pdfTemplate
+        WebArchiveTemplate $template
     ) {
         $this->brand = $brand;
         $this->sapiVersion = $sapiVersion;
         $this->logo = $logo;
         $this->query = $query;
         $this->title = $title;
-        $this->pdfTemplate = $pdfTemplate;
+        $this->template = $template;
     }
 
     /**
@@ -241,11 +241,11 @@ class ExportEventsAsPDF implements ExportEventsInterface
     }
 
     /**
-     * @return PDFTemplate
+     * @return WebArchiveTemplate
      */
-    public function getPDFTemplate()
+    public function getTemplate()
     {
-        return $this->pdfTemplate;
+        return $this->template;
     }
 
     /**

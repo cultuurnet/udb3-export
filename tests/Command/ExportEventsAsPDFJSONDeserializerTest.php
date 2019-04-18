@@ -4,7 +4,7 @@ namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
+use CultuurNet\UDB3\EventExport\Format\HTML\WebArchive\WebArchiveTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -50,7 +50,7 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
                 'vlieg',
                 'http://foo.bar/logo.svg',
                 new Title('a title'),
-                PDFTemplate::TIPS()
+                WebArchiveTemplate::TIPS()
             ),
             $command
         );
@@ -105,7 +105,7 @@ class ExportEventsAsPDFJSONDeserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new Publisher('a publisher'), $command->getPublisher());
         $this->assertEquals(new Footer('a footer'), $command->getFooter());
         $this->assertEquals(new EmailAddress('john@doe.com'), $command->getAddress());
-        $this->assertEquals(PDFTemplate::MAP(), $command->getPDFTemplate());
+        $this->assertEquals(WebArchiveTemplate::MAP(), $command->getTemplate());
     }
 
     /**

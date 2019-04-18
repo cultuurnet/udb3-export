@@ -8,7 +8,7 @@ namespace CultuurNet\UDB3\EventExport\Command;
 use CultuurNet\Deserializer\JSONDeserializer;
 use CultuurNet\Deserializer\MissingValueException;
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
+use CultuurNet\UDB3\EventExport\Format\HTML\WebArchive\WebArchiveTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -84,9 +84,9 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
 
         $title = new Title($customizations->title);
 
-        $pdfTemplate = PDFTemplate::TIPS();
+        $template = WebArchiveTemplate::TIPS();
         if (isset($customizations->template)) {
-            $pdfTemplate = PDFTemplate::fromNative($customizations->template);
+            $template = WebArchiveTemplate::fromNative($customizations->template);
         }
 
         $command = new ExportEventsAsPDF(
@@ -95,7 +95,7 @@ class ExportEventsAsPDFJSONDeserializer extends JSONDeserializer
             $brand,
             $logo,
             $title,
-            $pdfTemplate
+            $template
         );
 
         if (isset($json->email)) {

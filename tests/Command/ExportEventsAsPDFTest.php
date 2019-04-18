@@ -3,7 +3,7 @@
 namespace CultuurNet\UDB3\EventExport\Command;
 
 use CultuurNet\UDB3\EventExport\EventExportQuery;
-use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFTemplate;
+use CultuurNet\UDB3\EventExport\Format\HTML\WebArchive\WebArchiveTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Footer;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Publisher;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Subtitle;
@@ -26,7 +26,7 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
             'vlieg',
             'http://foo.bar/logo.svg',
             new Title('title'),
-            PDFTemplate::TIPS()
+            WebArchiveTemplate::TIPS()
         );
     }
 
@@ -62,8 +62,8 @@ class ExportEventsAsPDFTest extends \PHPUnit_Framework_TestCase
      */
     public function it_includes_a_template()
     {
-        $template = PDFTemplate::TIPS();
-        $this->assertEquals($template, $this->export->getPDFTemplate());
+        $template = WebArchiveTemplate::TIPS();
+        $this->assertEquals($template, $this->export->getTemplate());
     }
 
     /**
