@@ -12,6 +12,7 @@ abstract class WebArchiveFileFormat
     protected $htmlFileWriter;
 
     /**
+     * @param WebArchiveTemplate $template
      * @param string $brand
      * @param string $logo
      * @param string $title
@@ -21,6 +22,7 @@ abstract class WebArchiveFileFormat
      * @param string|null $partner
      */
     public function __construct(
+        WebArchiveTemplate $template,
         $brand,
         $logo,
         $title,
@@ -36,7 +38,8 @@ abstract class WebArchiveFileFormat
             'subtitle' => $subtitle,
             'footer' => $footer,
             'publisher' => $publisher,
-            'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe'))
+            'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe')),
+            'showMap' => $template->sameValueAs(WebArchiveTemplate::MAP()),
         ];
         $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables);
     }
