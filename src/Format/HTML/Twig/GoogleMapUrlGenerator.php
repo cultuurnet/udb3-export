@@ -36,6 +36,8 @@ class GoogleMapUrlGenerator extends AbstractExtension
      */
     public function generateGoogleMapUrl(array $markers, int $widthInPixels, int $heightInPixels): string
     {
+        $markers = array_unique($markers);
+
         $url = self::STATIC_MAP_URL;
         $url .= '?size=' . $widthInPixels . 'x' . $heightInPixels;
 
