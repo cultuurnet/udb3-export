@@ -146,6 +146,13 @@ class HTMLEventFormatter
                     'municipality' => $this->getAddressField($event, 'addressLocality')
                 ];
             }
+
+            if (property_exists($event->location, 'geo')) {
+                $address += [
+                    'latitude' => $event->location->geo->latitude,
+                    'longitude' => $event->location->geo->longitude,
+                ];
+            }
         }
 
         if (!empty($address)) {

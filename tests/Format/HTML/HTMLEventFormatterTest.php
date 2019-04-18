@@ -201,6 +201,15 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
                         'municipality' => 'Tienen',
                     ]
                 ]
+            ],
+            'with coordinates' => [
+                'event_with_location_coordinates.json',
+                $expectedFormattedEvent + [
+                    'address' => [
+                        'latitude' => '50.804739',
+                        'longitude' => '4.936491',
+                    ]
+                ]
             ]
         ];
     }
@@ -616,5 +625,13 @@ class HTMLEventFormatterTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertEquals($expectedMediaObject, $formattedEvent['mediaObject']);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_include_coordinates_when_set()
+    {
+
     }
 }
