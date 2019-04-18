@@ -64,7 +64,7 @@ class ExportEventsAsPDF implements ExportEventsInterface
     private $publisher;
 
     /**
-     * @var WebArchiveTemplate
+     * @var string
      */
     private $template;
 
@@ -89,7 +89,7 @@ class ExportEventsAsPDF implements ExportEventsInterface
         $this->logo = $logo;
         $this->query = $query;
         $this->title = $title;
-        $this->template = $template;
+        $this->template = $template->toNative();
     }
 
     /**
@@ -245,7 +245,7 @@ class ExportEventsAsPDF implements ExportEventsInterface
      */
     public function getTemplate()
     {
-        return $this->template;
+        return WebArchiveTemplate::fromNative($this->template);
     }
 
     /**
