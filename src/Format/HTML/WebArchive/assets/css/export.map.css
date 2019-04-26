@@ -13,6 +13,11 @@ html {
     box-sizing: inherit;
 }
 
+/* MAP */
+.map img {
+	width: 100%;
+}
+
 /* ACTIVITY */
 .activity {
 	position: relative;
