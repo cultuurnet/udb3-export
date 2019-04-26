@@ -8,7 +8,7 @@
 {% endfor %}
 {% if coordinates is not empty -%}
     <div class="map">
-        <img src="{{ googleMapUrl(coordinates, 1000, 500) }}" alt="Google Map" />
+        <img src="{{ googleMapUrl(coordinates, 640, 320) }}" alt="Google Map" />
     </div>
 {%- endif %}
 
