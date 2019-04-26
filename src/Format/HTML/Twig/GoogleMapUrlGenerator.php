@@ -39,7 +39,7 @@ class GoogleMapUrlGenerator extends AbstractExtension
         $markers = array_unique($markers);
 
         $url = self::STATIC_MAP_URL;
-        $url .= '?size=' . $widthInPixels . 'x' . $heightInPixels;
+        $url .= '?size=' . $widthInPixels . 'x' . $heightInPixels . '&scale=2';
 
         foreach ($markers as $marker) {
             $url .= '&markers=' . $marker;
