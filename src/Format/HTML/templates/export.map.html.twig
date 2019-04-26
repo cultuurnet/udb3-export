@@ -40,144 +40,22 @@
 
             </div>
 
-            {% set coordinates = [] %}
+            {% set number = 0 %}
+            {% set eventsBuffer = [] %}
             {% for event in events %}
-                {% if event.address.latitude and event.address.longitude %}
-                    {% set coordinates = coordinates|merge([event.address.latitude ~ ',' ~ event.address.longitude]) %}
+                {% set number = number + 1 %}
+                {% set eventsBuffer = eventsBuffer|merge([event]) %}
+
+                {% if number == 9 %}
+                    {% include 'export.map.activities.html.twig' with {'events': eventsBuffer} only %}
+                    {% set number = 0 %}
+                    {% set eventsBuffer = [] %}
                 {% endif %}
             {% endfor %}
-            {% if coordinates is not empty -%}
-                <div class="map">
-                    <img src="{{ googleMapUrl(coordinates, 1000, 500) }}" alt="Google Map" />
-                </div>
-            {%- endif %}
 
-
-            <div class="columns">
-                {%- for event in events %}
-
-                <section class="activity
-                {%- for brand in event.brands %} {{ brand }}{% endfor -%}
-                {%- if event.image is not defined %} imageless{% endif -%}
-                {%- if event.ageFrom %} agedFrom{% endif -%}
-                ">
-                    {% if event.image -%}
-                    <div class="activity__image-container">
-                        <img src="{{ event.image }}?width=600&height=600&maxheight=600&crop=auto" class="activity__image" />
-                        <span class="activity__image__copyright">&copy; {{ event.mediaObject.copyrightHolder }}</span>
-                    </div>
-                    {% endif -%}
-                    {% if event.ageFrom -%}
-                    <p class="activity__leeftijd">{{ event.ageFrom }}+</p>
-                    {% endif -%}
-                    <p class="activity__type">{{ event.type }}</p>
-                    <p class="activity__title">{{ event.title }}</p>
-                    <div class="activity__description">
-                        <p>{{ event.description }}</p>
-                    </div>
-                    <div class="activity__info">
-                        <table class="activity__info__table">
-                            <tr>
-                                <td>
-                                    <i class="fa fa-calendar"></i>&nbsp;
-                                </td>
-                                <td class="activity__info__dates">
-                                    {{ event.dates|raw }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <i class="fa fa-map-marker"></i>&nbsp;
-                                </td>
-                                <td>
-                                    {{ event.address.name }}<br />
-                                    {{ event.address.street }}<br />
-                                    {{ event.address.postcode }} {{ event.address.municipality }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <i class="fa fa-eur"></i>&nbsp;
-                                </td>
-                                <td>
-                                    {{ event.price }}
-                                </td>
-                            </tr>
-                            {%-  if event.price != 'Gratis' and event.uitpas -%}
-                            {% set tarifflabel = brand == "paspartoe" ? "Reductieprijs" : "Kansentarief" %}
-                            {%- for tariff in event.uitpas.prices %}
-
-                            <tr>
-                                <td>
-                                    <i class="fa fa-eur"></i>&nbsp;
-                                </td>
-                                <td>
-                                    {% if not tariff.forOtherCardSystems -%}
-                                        {{ tariff.price }} {{ tarifflabel }} voor {{ tariff.cardSystem }}
-                                    {%- else -%}
-                                        {{ tariff.price }} {{ tarifflabel }} voor kaarthouders uit een andere regio
-                                    {%- endif %}
-
-                                </td>
-                            </tr>
-                            {%- endfor %}
-
-                            {%- endif -%}
-                            {%- if event.taalicoonCount %}
-
-                            <tr>
-                                <td>
-                                    <i class="taalicoon taalicoon-face"></i>
-                                </td>
-                                <td>
-                                    {% for i in range(1, 4) -%}
-                                        {%- if i <= event.taalicoonCount -%}
-                                            {%- set taalicoonBallonClass = 'taalicoon-ballon-filled' -%}
-                                        {%- else -%}
-                                            {%- set taalicoonBallonClass = 'taalicoon-ballon' -%}
-                                        {%- endif -%}
-                                        <i class="taalicoon {{ taalicoonBallonClass }}"></i>
-                                    {% endfor -%}
-                                    <br>
-                                    <p class="taalicoon--description">
-                                        {{ event.taalicoonDescription }}
-                                    </p>
-                                </td>
-                            </tr>
-                        {% else %}
-
-                        {% endif -%}
-                        </table>
-                    </div>
-                    {%- if event.uitpas.advantages %}
-
-                    <div class="activity__uitpas">
-                        <p>
-                            {%- if brand == "paspartoe" -%}
-                                Ga met je Paspartoe:
-                            {%- else -%}
-                                Ga met je UiTPAS:
-                            {%- endif -%}
-                        </p>
-                        <ul>
-                            {%- for advantage in event.uitpas.advantages %}
-
-                            <li>{{ advantage }}</li>
-                            {%- endfor %}
-
-                            {%- for promotion in event.uitpas.promotions %}
-
-                            <li>{{ promotion }}</li>
-                            {%- endfor %}
-
-                        </ul>
-                    </div>
-                    {%- endif %}
-
-                </section>
-                {%- endfor %}
-
-            </div>
+            {% if eventsBuffer is not empty %}
+                {% include 'export.map.activities.html.twig' with {'events': eventsBuffer} only %}
+            {% endif %}
         </div>
     </body>
 </html>
