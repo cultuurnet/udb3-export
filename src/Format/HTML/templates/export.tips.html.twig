@@ -39,21 +39,6 @@
                 </div>
             </div>
 
-            {%- if showMap %}
-                {% set coordinates = [] %}
-                {% for event in events %}
-                    {% if event.address.latitude and event.address.longitude %}
-                        {% set coordinates = coordinates|merge([event.address.latitude ~ ',' ~ event.address.longitude]) %}
-                    {% endif %}
-                {% endfor %}
-                {% if coordinates is not empty -%}
-                    <div class="map">
-                        <img src="{{ googleMapUrl(coordinates, 600, 300) }}" alt="Google Map"/>
-                    </div>
-                {%- endif %}
-            {%- endif %}
-
-
             <div class="columns">
                 {%- for event in events %}
 

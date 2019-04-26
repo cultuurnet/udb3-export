@@ -40,9 +40,8 @@ abstract class WebArchiveFileFormat
             'footer' => $footer,
             'publisher' => $publisher,
             'partner' => !in_array($brand, array('uit', 'vlieg', 'uitpas', 'paspartoe')),
-            'showMap' => $template->sameValueAs(WebArchiveTemplate::MAP()),
         ];
-        $this->htmlFileWriter = new HTMLFileWriter('export.html.twig', $variables, $twig);
+        $this->htmlFileWriter = new HTMLFileWriter("export.{$template->getValue()}.html.twig", $variables, $twig);
     }
 
     /**

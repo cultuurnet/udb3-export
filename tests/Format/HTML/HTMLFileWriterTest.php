@@ -500,19 +500,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
      */
     protected function createHTMLFileWriter($variables)
     {
-        $twig = new \Twig_Environment(
-            new \Twig_Loader_Filesystem(__DIR__ . '/../../../src/Format/HTML/templates')
-        );
-
-        $twig->addExtension(
-            new GoogleMapUrlGenerator('GOOGLE_MAP_API_KEY')
-        );
-
-        return new HTMLFileWriter(
-            'export.html.twig',
-            $variables,
-            $twig
-        );
+        return new HTMLFileWriter('export.tips.html.twig', $variables);
     }
 
     /**
