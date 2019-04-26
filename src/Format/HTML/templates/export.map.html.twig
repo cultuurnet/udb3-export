@@ -40,22 +40,24 @@
 
             </div>
 
-            {% set number = 0 %}
-            {% set eventsBuffer = [] %}
-            {% for event in events %}
-                {% set number = number + 1 %}
-                {% set eventsBuffer = eventsBuffer|merge([event]) %}
+            <div class="activities">
+                {% set number = 0 %}
+                {% set eventsBuffer = [] %}
+                {% for event in events %}
+                    {% set number = number + 1 %}
+                    {% set eventsBuffer = eventsBuffer|merge([event]) %}
 
-                {% if number == 9 %}
+                    {% if number == 9 %}
+                        {% include 'export.map.activities.html.twig' with {'events': eventsBuffer} only %}
+                        {% set number = 0 %}
+                        {% set eventsBuffer = [] %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if eventsBuffer is not empty %}
                     {% include 'export.map.activities.html.twig' with {'events': eventsBuffer} only %}
-                    {% set number = 0 %}
-                    {% set eventsBuffer = [] %}
                 {% endif %}
-            {% endfor %}
-
-            {% if eventsBuffer is not empty %}
-                {% include 'export.map.activities.html.twig' with {'events': eventsBuffer} only %}
-            {% endif %}
+            </div>
         </div>
     </body>
 </html>

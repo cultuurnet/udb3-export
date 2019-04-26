@@ -20,6 +20,10 @@ html {
 }
 
 /* ACTIVITY */
+.activities .activities-group {
+	page-break-after: always;
+}
+
 .activity {
 	position: relative;
 	page-break-inside: avoid;
