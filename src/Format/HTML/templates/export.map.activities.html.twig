@@ -1,21 +1,38 @@
 <div class="activities-group">
-    {% set coordinates = [] %}
+    {% set allCoordinates = [] %}
+    {% set duplicateCoordinates = false %}
+    {% set markers = [] %}
     {% set number = 0 %}
     {% for event in events %}
         {% if event.address.latitude and event.address.longitude %}
             {% set number = number + 1 %}
-            {% set coordinates = coordinates|merge(['label:' ~ number ~ '|' ~ event.address.latitude ~ ',' ~ event.address.longitude]) %}
+            {% set eventCoordinates = event.address.latitude ~ ',' ~ event.address.longitude %}
+            
+            {%  if eventCoordinates not in allCoordinates %}
+                {% set allCoordinates = allCoordinates|merge([eventCoordinates]) %}
+                {% set markers = markers|merge(['label:' ~ number ~ '|' ~ eventCoordinates]) %}
+            {% else %}
+                {% set duplicateCoordinates = true %}
+            {% endif %}
         {% endif %}
     {% endfor %}
-    {% if coordinates is not empty -%}
+    {% if markers is not empty -%}
         <div class="map">
-            <img src="{{ googleMapUrl(coordinates, 640, 320) }}" alt="Google Map" />
+            <img src="{{ googleMapUrl(markers, 640, 320) }}" alt="Google Map" />
+
+            {% if duplicateCoordinates %}
+                <p>Meerdere evenementen op deze kaart gaan door op dezelfde locatie.</p>
+            {% endif %}
         </div>
+
     {%- endif %}
 
 
     <div class="columns">
+        {% set number = 0 %}
         {%- for event in events %}
+
+        {% set number = number + 1 %}
 
         <section class="activity
         {%- for brand in event.brands %} {{ brand }}{% endfor -%}
@@ -32,7 +49,7 @@
             <p class="activity__leeftijd">{{ event.ageFrom }}+</p>
             {% endif -%}
             <p class="activity__type">{{ event.type }}</p>
-            <p class="activity__title">{{ event.title }}</p>
+            <p class="activity__title">{{ number }}. {{ event.title }}</p>
             <div class="activity__description">
                 <p>{{ event.description }}</p>
             </div>

@@ -14,9 +14,11 @@ html {
 }
 
 /* MAP */
+.map {
+	margin-bottom: 1cm;
+}
 .map img {
 	width: 100%;
-	margin-bottom: 1cm;
 }
 
 /* ACTIVITY */
