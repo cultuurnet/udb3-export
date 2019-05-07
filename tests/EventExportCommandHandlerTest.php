@@ -6,6 +6,7 @@ use CultuurNet\UDB3\EventExport\Command\ExportEventsAsCSV;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsJsonLD;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsOOXML;
 use CultuurNet\UDB3\EventExport\Command\ExportEventsAsPDF;
+use CultuurNet\UDB3\EventExport\Format\HTML\WebArchive\WebArchiveTemplate;
 use CultuurNet\UDB3\EventExport\Format\HTML\PDF\PDFWebArchiveFileFormat;
 use CultuurNet\UDB3\EventExport\Format\HTML\Properties\Title;
 use CultuurNet\UDB3\EventExport\Format\JSONLD\JSONLDFileFormat;
@@ -146,7 +147,8 @@ class EventExportCommandHandlerTest extends \PHPUnit_Framework_TestCase
             new SapiVersion(SapiVersion::V2),
             'brand',
             'logo',
-            new Title('title')
+            new Title('title'),
+            WebArchiveTemplate::TIPS()
         );
         $exportEventsAsPDF = $exportEventsAsPDF->withEmailNotificationTo(
             new EmailAddress('jane@anonymous.com')
@@ -157,6 +159,7 @@ class EventExportCommandHandlerTest extends \PHPUnit_Framework_TestCase
             ->with(
                 new PDFWebArchiveFileFormat(
                     $this->princeXMLBinaryPath,
+                    WebArchiveTemplate::TIPS(),
                     'brand',
                     'logo',
                     new Title('title')

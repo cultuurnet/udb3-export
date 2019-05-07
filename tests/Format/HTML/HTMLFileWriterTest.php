@@ -2,6 +2,9 @@
 
 namespace CultuurNet\UDB3\EventExport\Format\HTML;
 
+use CultuurNet\UDB3\EventExport\Format\HTML\Twig\GoogleMapUrlGenerator;
+use Twig_Environment;
+
 class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -31,7 +34,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Lorem Ipsum.',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $this->assertFileExists($this->filePath);
     }
@@ -57,7 +60,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
             $twig
         );
 
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents($fileWithExpectedContent);
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -177,7 +180,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'Lorem Ipsum.',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -211,7 +214,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_without_image.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -247,7 +250,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_taaliconen.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -283,7 +286,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_four_taaliconen.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -323,7 +326,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_uitpas_brand.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -363,7 +366,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_age_range.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -425,7 +428,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
                 'title' => 'UiT',
             )
         );
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_uitpas_info.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -447,7 +450,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
         );
 
 
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_uitpas_info_paspartoe_branded.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -485,7 +488,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $fileWriter->write($this->filePath, $events);
+        $fileWriter->write($this->filePath, new \ArrayIterator($events));
 
         $expected = file_get_contents(__DIR__ . '/results/export_event_with_custom_logo.html');
         $this->assertHTMLFileContents($expected, $this->filePath);
@@ -497,10 +500,7 @@ class HTMLFileWriterTest extends \PHPUnit_Framework_TestCase
      */
     protected function createHTMLFileWriter($variables)
     {
-        return new HTMLFileWriter(
-            'export.html.twig',
-            $variables
-        );
+        return new HTMLFileWriter('export.tips.html.twig', $variables);
     }
 
     /**
