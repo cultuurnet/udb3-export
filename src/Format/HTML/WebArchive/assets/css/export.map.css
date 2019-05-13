@@ -14,11 +14,9 @@ html {
 }
 
 /* MAP */
-.map {
-	margin-bottom: 1cm;
-}
 .map img {
 	width: 100%;
+	margin-bottom: 1cm;
 }
 
 /* ACTIVITY */
@@ -30,11 +28,17 @@ html {
 	position: relative;
 	page-break-inside: avoid;
     column-break-after: always;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
 }
 .activity__image-container
 {
 	position: relative;
-	text-align: center;
+	position: relative;
+	text-align: left;
+    float: left;
+    margin-right: 0.5cm;
 }
 .no-image
 {
@@ -45,22 +49,22 @@ html {
 {
   width: auto;
   height: auto;
-  max-height: 4cm;
-  max-width: 4cm;
-  margin: 0 auto;
+  max-height: 3cm;
+  max-width: 3cm;
   display: block;
 }
 .activity__image__copyright
 {
 	display: inline-block;
 	margin-bottom: 0.5cm;
+    max-width: 3cm;
+    font-size: 80%;
 }
 .activity__type {
 	color: #777;
 	font-size: 12px;
 	font-weight: normal;
 	text-transform: uppercase;
-	border-bottom: 1px solid #777;
 	line-height: 1.1;
 	display: block;
 	margin-top: 0;
@@ -92,10 +96,9 @@ html {
     margin-top: 0;
     font-size: 9px;
     display: inline-block;
-    width: 100%;
 }
 .activity__info__table {
-    width: 100%;
+    width: 13.5cm;
     border-spacing: 0;
     border-collapse: separate;
 }
