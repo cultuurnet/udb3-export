@@ -51,7 +51,7 @@
             <p class="activity__type">{{ event.type }}</p>
             <p class="activity__title">{{ number }}. {{ event.title }}</p>
             <div class="activity__description">
-                <p>{{ event.description }}</p>
+                <p>{{ event.description|truncate(100) }}</p>
             </div>
             <div class="activity__info">
                 <table class="activity__info__table">
