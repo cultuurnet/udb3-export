@@ -68,9 +68,7 @@
                             <i class="fa fa-map-marker"></i>&nbsp;
                         </td>
                         <td>
-                            {{ event.address.name }}
-                            {{ event.address.street }}
-                            {{ event.address.postcode }} {{ event.address.municipality }}
+                            {{ event.address.name }}, {{ event.address.street }}, {{ event.address.postcode }} {{ event.address.municipality }}
                         </td>
                     </tr>
                     <tr>
@@ -116,7 +114,6 @@
                                 {%- endif -%}
                                 <i class="taalicoon {{ taalicoonBallonClass }}"></i>
                             {% endfor -%}
-                            <br>
                             <p class="taalicoon--description">
                                 {{ event.taalicoonDescription }}
                             </p>
