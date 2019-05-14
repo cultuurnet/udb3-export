@@ -16,7 +16,7 @@ html {
 /* MAP */
 .map img {
 	width: 100%;
-	margin-bottom: 1cm;
+	margin-bottom: 0.5cm;
 }
 
 /* ACTIVITY */
@@ -31,6 +31,7 @@ html {
     display: inline-block;
     width: 100%;
     margin-bottom: 20px;
+	border-bottom: 1px solid #CCC;
 }
 .activity__image-container
 {
@@ -57,8 +58,10 @@ html {
 {
 	display: inline-block;
 	margin-bottom: 0.5cm;
+	margin-top: 0.1cm;
     max-width: 3cm;
-    font-size: 80%;
+    font-size: 8px;
+	line-height: 1;
 }
 .activity__type {
 	color: #777;
@@ -103,7 +106,6 @@ html {
     border-collapse: separate;
 }
 .activity__info__table td {
-    border-top: 1px solid #ccc;
     padding: 3px 0;
     vertical-align: top;
 }
@@ -182,7 +184,7 @@ html {
 .header {
     position: relative;
     padding: 0 6cm 0 0;
-    min-height: 2.5cm;
+    min-height: 2cm;
     border-bottom: 1px solid #ccc;
 }
 .header__title {
@@ -263,14 +265,17 @@ html {
 .taalicoon-face
 {
 	background-image: url(../img/taalicoon-face.svg);
+	    display: inline-block;
 }
 .taalicoon-ballon-filled
 {
 	background-image: url(../img/taalicoon-ballon-filled.svg);
+	    display: inline-block;
 }
 .taalicoon-ballon
 {
 	background-image: url(../img/taalicoon-ballon.svg);
+	    display: inline-block;
 }
 .taalicoon--description
 {
@@ -279,6 +284,8 @@ html {
 	color: #777;
 	font-style: italic;
 	margin: 0;
+	    display: inline-block;
+	margin-left: 0.2cm;
 }
 
 /* CALENDAR SUMMARY */
@@ -306,7 +313,7 @@ html {
 	@page {
 		size: A4 portrait;
 		background: #ffffff;
-		margin: 2cm 2cm 4cm 2cm;
+		margin: 2cm 2cm 2cm 2cm;
 		font-size: 11px;
 		font-family: "Open Sans", sans-serif;
 
