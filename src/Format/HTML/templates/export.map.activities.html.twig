@@ -4,16 +4,18 @@
     {% set markers = [] %}
     {% set number = 0 %}
     {% for event in events %}
+        {% set number = number + 1 %}
         {% if event.address.latitude and event.address.longitude %}
-            {% set number = number + 1 %}
             {% set eventCoordinates = event.address.latitude ~ ',' ~ event.address.longitude %}
-            
+
             {%  if eventCoordinates not in allCoordinates %}
                 {% set allCoordinates = allCoordinates|merge([eventCoordinates]) %}
                 {% set markers = markers|merge(['label:' ~ number ~ '|' ~ eventCoordinates]) %}
             {% else %}
                 {% set duplicateCoordinates = true %}
             {% endif %}
+        {% else %}
+            {% set markers = markers|merge(['label:' ~ number ~ '|' ~ event.address.concatenated|url_encode]) %}
         {% endif %}
     {% endfor %}
     {% if markers is not empty -%}

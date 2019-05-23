@@ -135,16 +135,19 @@ class HTMLEventFormatter
         $address = [];
 
         if (property_exists($event, 'location')) {
-            if (property_exists($event->location, 'name')) {
-                $address['name'] = reset($event->location->name);
-            }
-
             if (property_exists($event->location, 'address')) {
                 $address += [
                     'street' => $this->getAddressField($event, 'streetAddress'),
                     'postcode' => $this->getAddressField($event, 'postalCode'),
-                    'municipality' => $this->getAddressField($event, 'addressLocality')
+                    'municipality' => $this->getAddressField($event, 'addressLocality'),
+                    'country' => $this->getAddressField($event, 'addressCountry'),
                 ];
+
+                $address['concatenated'] = implode(' ', $address);
+            }
+
+            if (property_exists($event->location, 'name')) {
+                $address['name'] = reset($event->location->name);
             }
 
             if (property_exists($event->location, 'geo')) {
